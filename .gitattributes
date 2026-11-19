@@ -1,0 +1,5 @@
+
+# NCS language configuration
+*.ncs linguist-detectable=true
+*.ncs.compile linguist-generated=true
+Release/** linguist-generated=true
