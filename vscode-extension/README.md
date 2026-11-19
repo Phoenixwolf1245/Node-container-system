@@ -1,5 +1,3 @@
-![NCS logo](/icons/ncs-extension.png)
-
 # NCS Visual Studio Code Helper
 
 The official core development extension for the **Node Container System (NCS)**.
