@@ -1,0 +1,21 @@
+!<-- Green at depth zero
+<node>"data"</>
+<name>"Alex"</str>
+<counter>1</int>
+<protected>42</$int>
+<def:show(name:str!{A person.},count:[int,float])> !<-- Short summary
+"""
+Orange Markdown documentation.
+!<-- This text is inside the multiline comment.
+"""
+	!{Green inline comment.}
+	!<-- Green at depth one
+	<print(f"Hello {name}, count {count}, clock {sys.time.clock()}")/p>
+</d>
+counter%add(1)
+<print(f"Value {counter}")/p>
+!<-- Deliberate errors, verify red squiggles and minimap markers:
+<print(protected)/p>
+<bad>3.14</int>
+<invalid-name>"bad"</str>
+<wrong>1</unknown>

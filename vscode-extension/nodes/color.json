@@ -1,0 +1,9 @@
+{
+  "name": "color",
+  "signature": true,
+  "label": "Color (planned)",
+  "planned": true,
+  "definition": "Hex RGB with optional alpha; editor preview and color picker.",
+  "template": "<${1:color}>\"#${2:FF0000FF}\"</color>$0",
+  "example": "<color>\"#FF000080\"</color>"
+}

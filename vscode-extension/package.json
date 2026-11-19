@@ -1,0 +1,570 @@
+{
+  "name": "ncs-language",
+  "displayName": "NCS Language Support",
+  "description": "NCS editor palette, diagnostics, modular node catalog, function context and symbol navigation.",
+  "version": "0.12.0",
+  "publisher": "ncs-local",
+  "private": true,
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Snippets",
+    "Themes"
+  ],
+  "main": "./extension.js",
+  "activationEvents": [
+    "onLanguage:ncs",
+    "onCommand:ncs.wrapSelectionInNode",
+    "onCommand:ncs.insertClosingSignature",
+    "onCommand:ncs.inspectEditor",
+    "onCommand:ncs.applyTheme",
+    "onCommand:ncs.enableDark2026"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "ncs",
+        "aliases": [
+          "NCS",
+          "Node Container System"
+        ],
+        "extensions": [
+          ".ncs"
+        ],
+        "configuration": "./language-configuration.json",
+        "icon": {
+          "light": "./icons/ncs-file-32.png",
+          "dark": "./icons/ncs-file-32.png"
+        }
+      },
+      {
+        "id": "ncs-compiled",
+        "aliases": [
+          "NCS Compiled"
+        ],
+        "extensions": [
+          ".ncs.compile"
+        ],
+        "icon": {
+          "light": "./icons/ncs-file-32.png",
+          "dark": "./icons/ncs-file-32.png"
+        }
+      }
+    ],
+    "grammars": [
+      {
+        "language": "ncs",
+        "scopeName": "source.ncs",
+        "path": "./syntaxes/ncs.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "ncs",
+        "path": "./snippets/ncs.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "ncs.wrapSelectionInNode",
+        "title": "NCS: Wrap Selection in Node"
+      },
+      {
+        "command": "ncs.insertClosingSignature",
+        "title": "NCS: Insert Closing Signature"
+      },
+      {
+        "command": "ncs.inspectEditor",
+        "title": "NCS: Inspect Editor Support"
+      },
+      {
+        "command": "ncs.applyTheme",
+        "title": "NCS: Apply NCS Colors"
+      },
+      {
+        "command": "ncs.previewMedia",
+        "title": "NCS: Preview Media or Matrix"
+      },
+      {
+        "command": "ncs.enableDark2026",
+        "title": "NCS: Enable Dark 2026 Support"
+      }
+    ],
+    "themes": [
+      {
+        "label": "NCS Dark v0.6",
+        "uiTheme": "vs-dark",
+        "path": "./themes/ncs-dark.json"
+      }
+    ],
+    "configurationDefaults": {
+      "[ncs]": {
+        "editor.semanticHighlighting.enabled": true,
+        "editor.bracketPairColorization.enabled": false,
+        "editor.suggestOnTriggerCharacters": true,
+        "editor.renderValidationDecorations": "on",
+        "editor.quickSuggestions": {
+          "other": "on",
+          "comments": "off",
+          "strings": "off"
+        },
+        "editor.colorDecorators": true,
+        "editor.minimap.showRegionSectionHeaders": false,
+        "editor.minimap.showMarkSectionHeaders": false
+      },
+      "editor.semanticTokenColorCustomizations": {
+        "[Dark 2026]": {
+          "rules": {
+            "ncsNode:ncs": {
+              "foreground": "#569CD6",
+              "bold": false,
+              "italic": false,
+              "underline": false,
+              "strikethrough": false
+            },
+            "ncsSignature:ncs": {
+              "foreground": "#A6E22E",
+              "bold": false,
+              "italic": false,
+              "underline": false,
+              "strikethrough": false
+            },
+            "ncsControl:ncs": {
+              "foreground": "#C586C0",
+              "bold": false,
+              "italic": false,
+              "underline": false,
+              "strikethrough": false
+            },
+            "ncsBoolean:ncs": {
+              "foreground": "#C586C0",
+              "bold": false,
+              "italic": false,
+              "underline": false,
+              "strikethrough": false
+            },
+            "ncsCall:ncs": {
+              "foreground": "#569CD6",
+              "bold": false,
+              "italic": false,
+              "underline": false,
+              "strikethrough": false
+            },
+            "ncsMode:ncs": {
+              "foreground": "#E87859",
+              "bold": false,
+              "italic": false,
+              "underline": false,
+              "strikethrough": false
+            },
+            "ncsString:ncs": {
+              "foreground": "#CE9178",
+              "bold": false,
+              "italic": false,
+              "underline": false,
+              "strikethrough": false
+            },
+            "ncsFstring:ncs": {
+              "foreground": "#C586C0",
+              "bold": false,
+              "italic": false,
+              "underline": false,
+              "strikethrough": false
+            },
+            "ncsComment:ncs": {
+              "foreground": "#6A9955",
+              "bold": false,
+              "italic": false,
+              "underline": false,
+              "strikethrough": false
+            },
+            "ncsDoc:ncs": {
+              "foreground": "#D19A66",
+              "bold": false,
+              "italic": false,
+              "underline": false,
+              "strikethrough": false
+            },
+            "ncsYellow:ncs": {
+              "foreground": "#F0E442",
+              "bold": false,
+              "italic": false,
+              "underline": false,
+              "strikethrough": false
+            },
+            "ncsDelimiter:ncs": {
+              "foreground": "#808080",
+              "bold": false,
+              "italic": false,
+              "underline": false,
+              "strikethrough": false
+            },
+            "ncsVariable:ncs": {
+              "foreground": "#FFFFFF",
+              "bold": false,
+              "italic": false,
+              "underline": false,
+              "strikethrough": false
+            },
+            "ncsNumber:ncs": {
+              "foreground": "#B5CEA8",
+              "bold": false,
+              "italic": false,
+              "underline": false,
+              "strikethrough": false
+            },
+            "ncsInvalid:ncs": {
+              "foreground": "#FF6363",
+              "bold": false,
+              "italic": false,
+              "underline": false,
+              "strikethrough": false
+            }
+          }
+        }
+      },
+      "editor.tokenColorCustomizations": {
+        "[Dark 2026]": {
+          "textMateRules": [
+            {
+              "scope": [
+                "source.ncs comment.line.exclamation.ncs",
+                "source.ncs comment.block.exclamation.ncs"
+              ],
+              "settings": {
+                "foreground": "#6A9955",
+                "fontStyle": ""
+              }
+            },
+            {
+              "scope": [
+                "source.ncs comment.block.triplequote.ncs"
+              ],
+              "settings": {
+                "foreground": "#D19A66",
+                "fontStyle": ""
+              }
+            },
+            {
+              "scope": [
+                "source.ncs string.quoted.double.ncs",
+                "source.ncs string.quoted.single.ncs"
+              ],
+              "settings": {
+                "foreground": "#CE9178",
+                "fontStyle": ""
+              }
+            },
+            {
+              "scope": [
+                "source.ncs string.quoted.double.fstring.ncs",
+                "source.ncs string.quoted.double.fstring.ncs constant.character.escape.ncs"
+              ],
+              "settings": {
+                "foreground": "#C586C0",
+                "fontStyle": ""
+              }
+            },
+            {
+              "scope": [
+                "source.ncs constant.character.escape.ncs"
+              ],
+              "settings": {
+                "foreground": "#CE9178",
+                "fontStyle": ""
+              }
+            },
+            {
+              "scope": [
+                "source.ncs entity.name.function.definition.ncs",
+                "source.ncs entity.name.function.call.ncs",
+                "source.ncs entity.name.type.signature.ncs",
+                "source.ncs entity.name.tag.node.ncs"
+              ],
+              "settings": {
+                "foreground": "#569CD6",
+                "fontStyle": ""
+              }
+            },
+            {
+              "scope": [
+                "source.ncs keyword.control.mode.ncs",
+                "source.ncs support.function.builtin.ncs"
+              ],
+              "settings": {
+                "foreground": "#E87859",
+                "fontStyle": ""
+              }
+            },
+            {
+              "scope": [
+                "source.ncs variable.other.node.ncs",
+                "source.ncs variable.parameter.interpolation.ncs",
+                "source.ncs constant.language.boolean.ncs",
+                "source.ncs constant.numeric.ncs"
+              ],
+              "settings": {
+                "foreground": "#FFFFFF",
+                "fontStyle": ""
+              }
+            },
+            {
+              "scope": [
+                "source.ncs punctuation.definition.tag.ncs"
+              ],
+              "settings": {
+                "foreground": "#808080",
+                "fontStyle": ""
+              }
+            },
+            {
+              "scope": [
+                "source.ncs punctuation.bracket.ncs",
+                "source.ncs keyword.operator.modifier.ncs"
+              ],
+              "settings": {
+                "foreground": "#F0E442",
+                "fontStyle": ""
+              }
+            },
+            {
+              "scope": [
+                "source.ncs string.quoted.double.fstring.ncs meta.interpolation.ncs variable.parameter.interpolation.ncs"
+              ],
+              "settings": {
+                "foreground": "#FFFFFF",
+                "fontStyle": ""
+              }
+            },
+            {
+              "scope": [
+                "source.ncs string.quoted.double.fstring.ncs meta.interpolation.ncs entity.name.function.call.ncs",
+                "source.ncs string.quoted.double.fstring.ncs meta.interpolation.ncs support.function.builtin.ncs"
+              ],
+              "settings": {
+                "foreground": "#569CD6",
+                "fontStyle": ""
+              }
+            },
+            {
+              "scope": [
+                "source.ncs string.quoted.double.fstring.ncs meta.interpolation.ncs punctuation.bracket.ncs"
+              ],
+              "settings": {
+                "foreground": "#F0E442",
+                "fontStyle": ""
+              }
+            },
+            {
+              "scope": [
+                "source.ncs invalid.illegal.signature.ncs"
+              ],
+              "settings": {
+                "foreground": "#FF6363",
+                "fontStyle": ""
+              }
+            },
+            {
+              "scope": [
+                "source.ncs string.quoted.double.fstring.ncs meta.interpolation.ncs string.quoted.double.ncs",
+                "source.ncs string.quoted.double.fstring.ncs meta.interpolation.ncs string.quoted.single.ncs"
+              ],
+              "settings": {
+                "foreground": "#CE9178",
+                "fontStyle": ""
+              }
+            },
+            {
+              "scope": [
+                "source.ncs punctuation.separator.ncs"
+              ],
+              "settings": {
+                "foreground": "#F0E442",
+                "fontStyle": ""
+              }
+            },
+            {
+              "scope": [
+                "source.ncs entity.name.type.signature.ncs"
+              ],
+              "settings": {
+                "foreground": "#A6E22E",
+                "fontStyle": ""
+              }
+            },
+            {
+              "scope": [
+                "source.ncs keyword.control.flow.ncs",
+                "source.ncs constant.language.boolean.ncs",
+                "source.ncs constant.numeric.ncs"
+              ],
+              "settings": {
+                "foreground": "#C586C0",
+                "fontStyle": ""
+              }
+            },
+            {
+              "scope": [
+                "source.ncs constant.numeric.ncs"
+              ],
+              "settings": {
+                "foreground": "#B5CEA8",
+                "fontStyle": ""
+              }
+            }
+          ]
+        }
+      }
+    },
+    "configuration": {
+      "title": "NCS",
+      "properties": {
+        "ncs.diagnostics.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show conservative source-only NCS diagnostics."
+        },
+        "ncs.colors.enforcePalette": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable NCS semantic tokens. Dark 2026 has built-in NCS-specific color defaults. Run NCS: Apply NCS Colors to repair overridden settings."
+        },
+        "ncs.previews.inline": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show compact matrix, still-image and WAV waveform previews beside their declarations."
+        }
+      }
+    },
+    "semanticTokenTypes": [
+      {
+        "id": "ncsNode",
+        "description": "NCS node"
+      },
+      {
+        "id": "ncsSignature",
+        "description": "NCS signature"
+      },
+      {
+        "id": "ncsCall",
+        "description": "NCS call"
+      },
+      {
+        "id": "ncsMode",
+        "description": "NCS mode"
+      },
+      {
+        "id": "ncsControl",
+        "description": "NCS control"
+      },
+      {
+        "id": "ncsBoolean",
+        "description": "NCS boolean"
+      },
+      {
+        "id": "ncsString",
+        "description": "NCS string"
+      },
+      {
+        "id": "ncsFstring",
+        "description": "NCS fstring"
+      },
+      {
+        "id": "ncsComment",
+        "description": "NCS comment"
+      },
+      {
+        "id": "ncsDoc",
+        "description": "NCS doc"
+      },
+      {
+        "id": "ncsYellow",
+        "description": "NCS yellow"
+      },
+      {
+        "id": "ncsDelimiter",
+        "description": "NCS delimiter"
+      },
+      {
+        "id": "ncsVariable",
+        "description": "NCS variable"
+      },
+      {
+        "id": "ncsNumber",
+        "description": "NCS number"
+      },
+      {
+        "id": "ncsInvalid",
+        "description": "NCS invalid"
+      }
+    ],
+    "semanticTokenScopes": [
+      {
+        "language": "ncs",
+        "scopes": {
+          "ncsNode": [
+            "entity.name.tag.node.ncs"
+          ],
+          "ncsSignature": [
+            "entity.name.type.signature.ncs"
+          ],
+          "ncsCall": [
+            "entity.name.function.call.ncs"
+          ],
+          "ncsMode": [
+            "support.function.builtin.ncs"
+          ],
+          "ncsControl": [
+            "keyword.control.flow.ncs"
+          ],
+          "ncsBoolean": [
+            "constant.language.boolean.ncs"
+          ],
+          "ncsString": [
+            "string.quoted.double.ncs"
+          ],
+          "ncsFstring": [
+            "string.quoted.double.fstring.ncs"
+          ],
+          "ncsComment": [
+            "comment.line.exclamation.ncs"
+          ],
+          "ncsDoc": [
+            "comment.block.triplequote.ncs"
+          ],
+          "ncsYellow": [
+            "punctuation.bracket.ncs"
+          ],
+          "ncsDelimiter": [
+            "punctuation.definition.tag.ncs"
+          ],
+          "ncsVariable": [
+            "variable.other.node.ncs"
+          ],
+          "ncsNumber": [
+            "constant.numeric.ncs"
+          ],
+          "ncsInvalid": [
+            "invalid.illegal.signature.ncs"
+          ]
+        }
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "ncs.previewMedia",
+          "when": "editorLangId == ncs",
+          "group": "navigation@90"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "test": "node test-context.js && node test-v05.js && node test-theme-support.js && node test-comments.js"
+  },
+  "icon": "icons/ncs-extension.png"
+}

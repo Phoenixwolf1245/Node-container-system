@@ -1,0 +1,9 @@
+{
+  "name": "use",
+  "label": "Use function alias",
+  "planned": false,
+  "definition": "Use or alias a selected node or function.",
+  "detail": "Stage 5 bootstrap aliases a function with source.path|as|alias; does not change the underlying definition or invoke it. Data aliasing is not yet implemented.",
+  "template": "<use|${1:library.Function}|as|${2:Alias}/use>$0",
+  "example": "<use|library.Function|as|Alias/use>"
+}

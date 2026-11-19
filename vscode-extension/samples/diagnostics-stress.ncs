@@ -1,0 +1,30 @@
+!{ INTENTIONAL ERRORS: this file is not meant to compile. }
+<greeting>"Hello"</str>
+<value>not_a_number</int>
+<node>data</str>
+<items>[1|2|3|large]</list[int](3)>
+<print(greeting)/p>
+<error_dict>
+    <Apple>"Value"</dict[any](1)>
+</dict[str](1)>
+Oh, and this text is part of the file.
+<match(value):
+    |case|("example"):
+        pass
+    |case|_:
+        pass
+/43|match>
+<if|true>
+    pass
+</if>
+<if|true>
+    pass
+<elif|false>
+    pass
+<else>
+    pass
+</if>
+<number>42</int&immut>
+<throw(warn):
+    |'Something happened.'|
+/try>
