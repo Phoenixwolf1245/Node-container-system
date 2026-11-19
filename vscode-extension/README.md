@@ -1,4 +1,4 @@
-![NCS logo](NCS/icons/rendered/ncs.png)
+![NCS logo](/icons/rendered/NCS.png)
 
 # NCS Visual Studio Code Helper
 
