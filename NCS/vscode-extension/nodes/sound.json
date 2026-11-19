@@ -1,0 +1,9 @@
+{
+  "name": "sound",
+  "signature": true,
+  "label": "Sound (planned)",
+  "planned": true,
+  "definition": "Embedded audio path with format; compiler planned.",
+  "template": "<${1:audio}>\"${2:sound.wav}\"</sound(${3:wav})>$0",
+  "example": "<audio>\"sound.wav\"</sound(wav)>"
+}

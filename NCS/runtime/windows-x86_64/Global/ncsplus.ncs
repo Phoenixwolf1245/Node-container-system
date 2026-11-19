@@ -1,0 +1,104 @@
+!{ NCS Plus extends built-in signatures. Global installation is explicit in Global/. }
+!{ Scalar/matrix handler dispatch is experimental; embedded media execution is pending. }
+<__color__>
+    <?>
+        <def:hex("-call")>
+            return(call)
+        </d>
+    </d>
+    <%>
+        <def:hex("-call",value:str)>
+            self%replace(value)
+        </d>
+    </d>
+    <Parent>"str"</str>
+    <Format>f"<{self.node_name}>'{self.data}'</{self}>"</fstr>
+    <test>"<tint>'#FF660080'</color>"</str>
+    <info>"RGBA hexadecimal color. Alpha 0 is transparent, alpha 255 is opaque."</str>
+    <def:main()>
+        !{ Validate and normalize the format when custom handler execution is implemented. }
+    </d>
+</node>
+<__matrix__>
+    <?>
+        <def:columns("-call")>
+            return(self?x)
+        </d>
+        <def:rows("-call")>
+            return(self?y)
+        </d>
+        <def:cell("-call",x:int,y:int)>
+            return(self?at(x|y))
+        </d>
+    </d>
+    <%>
+        <def:cell("-call",x:int,y:int,value:[int,float])>
+            self%set(x|y|value)
+        </d>
+    </d>
+    <Parent>"matrix"</str>
+    <Format>f"<{self.node_name}>{self.data}</{self}({self.data.subdat1})>"</fstr>
+    <test>"<grid>[[1|2]|[3|4]]</matrix(2,2)>"</str>
+    <info>"Rectangular numeric matrix; X columns, Y rows. Base arithmetic exists, handler aliases are pending."</str>
+    <def:main()>
+    </d>
+</node>
+<__image__>
+    <?>
+        <def:exists("-call")>
+            return(call?exists)
+        </d>
+    </d>
+    <%>
+        <def:resize("-call",width:int,height:int)>
+            !{ Private native backend will edit self's image bytes, not another file. }
+            throw(error|"Image handler dispatch is not implemented")
+        </d>
+    </d>
+    <Parent>"str"</str>
+    <Format>f"<{self.node_name}>'{self.data}'</{self}({self.data.subdat1})>"</fstr>
+    <test>"<picture>'assets/photo.png'</image(png)>"</str>
+    <info>f"### Image\nStill image data. The format is subdata1.\n{self.test}"</fstr>
+    <def:main()>
+    </d>
+</node>
+<__mimage__>
+    <?>
+        <def:exists("-call")>
+            return(call?exists)
+        </d>
+    </d>
+    <%>
+        <def:resize("-call",width:int,height:int)>
+            throw(error|"Moving-image handler dispatch is not implemented")
+        </d>
+    </d>
+    <Parent>"str"</str>
+    <Format>f"<{self.node_name}>'{self.data}'</{self}({self.data.subdat1})>"</fstr>
+    <test>"<video>'assets/video.mp4'</mimage(mp4)>"</str>
+    <info>f"### Moving image\nSilent moving pictures. Combine with sound for distinct picture and audio tracks.\n{self.test}"</fstr>
+    <def:main()>
+    </d>
+</node>
+<__sound__>
+    <?>
+        <def:exists("-call")>
+            return(call?exists)
+        </d>
+    </d>
+    <%>
+        <def:gain("-call",factor:[int,float])>
+            throw(error|"Sound handler dispatch is not implemented")
+        </d>
+        <def:remove_audio("-call")>
+            throw(error|"Separate audio-track dispatch is not implemented")
+        </d>
+    </d>
+    <Parent>"str"</str>
+    <Format>f"<{self.node_name}>'{self.data}'</{self}({self.data.subdat1})>"</fstr>
+    <test>"<audio>'assets/audio.wav'</sound(wav)>"</str>
+    <info>f"### Sound\nAudio data. File type is subdata1. With mimage, it is a separate audio track.\n{self.test}"</fstr>
+    <def:main()>
+        !{ Formatting and editing only; no log/error/warning definitions. }
+    </d>
+</node>

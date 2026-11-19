@@ -1,0 +1,10 @@
+{
+  "name": "video",
+  "label": "Moving image with sound (planned)",
+  "signature": false,
+  "planned": true,
+  "definition": "Combined moving-image and sound tracks; separate format parameters.",
+  "detail": "Preview support only; independent audio and video track editing requires the custom node runtime.",
+  "template": "<${1:video}>\"${2:video.mp4}\"</mimage(${3:mp4})|sound(${4:mp4})>$0",
+  "example": "<video>\"video.mp4\"</mimage(mp4)|sound(mp4)>"
+}

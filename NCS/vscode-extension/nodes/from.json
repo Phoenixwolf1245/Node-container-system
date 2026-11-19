@@ -1,0 +1,9 @@
+{
+  "name": "from",
+  "label": "From source file",
+  "planned": false,
+  "definition": "Include selected nodes from a source file.",
+  "detail": "Stage 5 bootstrap includes a selected top-level source node and conservatively detected dependencies without making a separate library. Nested module graphs are not supported.",
+  "template": "<from|\"${1:library.ncs}\"|${2:Node}/use>$0",
+  "example": "<from|\"library.ncs\"|Function/use>"
+}

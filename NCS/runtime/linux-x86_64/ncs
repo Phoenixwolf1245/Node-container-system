@@ -1,0 +1,308 @@
+#!/usr/bin/env bash
+# Official runtime launcher. No Rust, Python, auto-bootstrap, or language bridge.
+set -euo pipefail
+SELF="$(readlink -f -- "${BASH_SOURCE[0]}")"
+ROOT="$(cd -- "$(dirname -- "$SELF")" && pwd)"
+BIN="$ROOT/compiler/bin"
+export NCS_CORE_CONFIG="${NCS_CORE_CONFIG:-$ROOT/config/logging.conf}"
+NCS_STATE="${XDG_STATE_HOME:-$HOME/.local/state}/ncs"
+export NCS_GLOBAL="${NCS_GLOBAL:-$ROOT/Global}"
+# Honour an explicit config/file override. Resolve relative log paths against the installation.
+if [[ -z "${NCS_LOG_FILE:-}" ]]; then
+  configured_log="$(sed -n 's/^[[:space:]]*log_file[[:space:]]*=[[:space:]]*//p' "$NCS_CORE_CONFIG" 2>/dev/null | tail -n1 || true)"
+  configured_log="${configured_log:-logs/ncs.log}"
+  if [[ "$configured_log" == /* ]]; then export NCS_LOG_FILE="$configured_log"; else export NCS_LOG_FILE="$NCS_STATE/$configured_log"; fi
+else
+  export NCS_LOG_FILE="$(realpath -m -- "$NCS_LOG_FILE")"
+fi
+if [[ -z "${NCS_LOG_LEVEL:-}" ]]; then
+  export NCS_LOG_LEVEL="$(sed -n 's/^[[:space:]]*log_level[[:space:]]*=[[:space:]]*//p' "$NCS_CORE_CONFIG" 2>/dev/null | tail -n1 || true)"
+  export NCS_LOG_LEVEL="${NCS_LOG_LEVEL:-2}"
+fi
+err() { printf 'ncs: %s\n' "$*" >&2; exit 2; }
+need() { [[ -f "$1" ]] || err "Missing $1. Reinstall the NCS package."; }
+usage() {
+  cat <<'HELP'
+Usage:
+  ncs compile -SO|-ELF|-DLL|-EXE|-COMPILE source.ncs [-o output]
+  ncs compile -SO|-ELF|-DLL|-EXE source.ncs.compile [-o output]
+  ncs interpret [-L0..4|--no-log] source.ncs[.compile]
+  ncs run [-L0..4|--no-log] binary.elf|binary.so|binary.exe|binary.dll
+  NCS (no arguments) — interactive prompt
+  ncs log LEVEL SOURCE TAG MESSAGE
+Compiler seed: NCS_compile.elf (default), or NCS_COMPILER2_HOST=SO.
+No automatic bootstrap or Rust fallback. If a feature is unsupported, compilation fails.
+HELP
+}
+log_event() {
+  local level="$1" source="$2" tag="$3" message="$4"
+  [[ "$NCS_LOG_LEVEL" =~ ^[0-4]$ ]] || err 'Invalid NCS_LOG_LEVEL'
+  case "$tag" in error) level=1;; warning|warn) level=2;; esac
+  (( NCS_LOG_LEVEL < level )) && return 0
+  need "$BIN/ncs_logger.elf"
+  NCS_LOGGER_LEVEL="$level" NCS_LOGGER_SOURCE="$source" NCS_LOGGER_TAG="$tag" NCS_LOGGER_MESSAGE="$message" "$BIN/ncs_logger.elf"
+}
+with_log() {
+  local source="$1" action="$2"; shift 2
+  log_event 2 "$source" start "$action started" || printf 'ncs: logger start failed\n' >&2
+  local rc=0
+  "$@" || rc=$?
+  log_event 2 "$source" finish "$action finished (exit $rc)" || printf 'ncs: logger finish failed\n' >&2
+  return "$rc"
+}
+interpreter() {
+  need "$BIN/ncs_interpreter.elf"
+  NCS_INTERPRETER_INPUT="$1" NCS_INTERPRETER_MODE="$2" NCS_INTERPRETER_OUTPUT="${3:-}" NCS_INTERPRETER_SOURCE_DIR="${1%/*}" NCS_INTERPRETER_GLOBAL_DIR="$NCS_GLOBAL" "$BIN/ncs_interpreter.elf"
+}
+compiler() {
+  local source_dir="${1%/*}"
+  local private_logger=0
+  if [[ -f "$ROOT/logger/ncs_logger.ncs" && "$1" == "$(realpath -- "$ROOT/logger/ncs_logger.ncs")" ]]; then private_logger=1; fi
+  source_dir="${source_dir:-/}"
+  case "${NCS_COMPILER2_HOST:-ELF}" in
+    ELF|elf) need "$BIN/NCS_compile.elf"; NCS_COMPILER_SOURCE="$1" NCS_COMPILER_SOURCE_DIR="$source_dir" NCS_COMPILER_PRIVATE_LOGGER="$private_logger" NCS_COMPILER_GLOBAL_DIR="$NCS_GLOBAL" NCS_COMPILER_C_PATH="$2" NCS_COMPILER_MODE="${3:-native}" NCS_COMPILER_RUST_BRIDGE=0 NCS_COMPILER_AUTO_BACKEND=0 "$BIN/NCS_compile.elf" ;;
+    SO|so) need "$BIN/NCS_compile.so"; need "$BIN/ncs-so-host"; NCS_COMPILER_SOURCE="$1" NCS_COMPILER_SOURCE_DIR="$source_dir" NCS_COMPILER_PRIVATE_LOGGER="$private_logger" NCS_COMPILER_GLOBAL_DIR="$NCS_GLOBAL" NCS_COMPILER_C_PATH="$2" NCS_COMPILER_MODE="${3:-native}" NCS_COMPILER_RUST_BRIDGE=0 NCS_COMPILER_AUTO_BACKEND=0 "$BIN/ncs-so-host" "$BIN/NCS_compile.so" ;;
+    *) err 'NCS_COMPILER2_HOST must be ELF or SO' ;;
+  esac
+}
+compile() {
+  local target='' source='' output='' a ext stem tool strip_tool work native candidate module namespace digest lib lib_ext lib_source lib_path final_lib tool_hash
+  while (($#)); do
+    a="$1"; shift
+    case "$a" in
+      -SO|-ELF|-LINUX|-DLL|-EXE|-COMPILE) [[ -z "$target" ]] || err 'Specify one target'; target="${a#-}"; [[ "$target" != LINUX ]] || target=ELF ;;
+      -o|--output) (($#)) || err 'Missing output'; [[ -z "$output" ]] || err 'Duplicate output'; output="$1"; shift ;;
+      --strict) ;;
+      --full-language-bridge|--auto-backend) err 'Rust fallback was removed from the official launcher' ;;
+      -*) err "Unknown option $a" ;;
+      *) if [[ -z "$source" ]]; then source="$a"; elif [[ -z "$output" ]]; then output="$a"; else err 'One source file per command'; fi ;;
+    esac
+  done
+  [[ -n "$target" ]] || err 'Specify a target'
+  [[ -f "$source" && ( "$source" == *.ncs || "$source" == *.ncs.compile ) ]] || err 'Source must be an existing .ncs or .ncs.compile file'
+  source="$(realpath -- "$source")"
+  stem="$(basename -- "${source%.compile}")"; stem="${stem%.ncs}"
+  case "$target" in SO) ext=so;; ELF) ext=elf;; DLL) ext=dll;; EXE) ext=exe;; COMPILE) ext=ncs.compile;; esac
+  output="$(realpath -m -- "${output:-$PWD/$stem.$ext}")"
+  case "$target" in ELF) [[ "$output" != *.so && "$output" != *.dll && "$output" != *.exe && "$output" != *.ncs && "$output" != *.ncs.compile ]] || err 'Invalid ELF output extension';; *) [[ "$output" == *.$ext ]] || err "Output must end in .$ext";; esac
+  [[ "$output" != "$source" ]] || err 'Output cannot overwrite source'
+  # Do not accidentally overwrite the active compiler or another input tool.
+  case "$output" in "$BIN/NCS_compile.elf"|"$BIN/NCS_compile.so"|"$BIN/ncs_interpreter.elf"|"$BIN/ncs_logger.elf"|"$BIN/ncs-so-host"|"$BIN/ncs-dll-host.exe") err 'Use a separate output path to test rebuilding seed tools';; esac
+  mkdir -p -- "$(dirname -- "$output")"
+  work="$(mktemp -d -p "$(dirname -- "$output")" .ncs-build-XXXXXXXX)"
+  trap 'rm -rf -- "${NCS_WORK:-}"' EXIT
+  NCS_WORK="$work"
+  if [[ "$target" == COMPILE ]]; then
+    [[ "$source" == *.ncs ]] || err 'Input is already portable'
+    with_log compiler emit compiler "$source" "$work/out.ncs.compile" portable
+    native="$work/out.ncs.compile"
+    if [[ -s "$native.portable-imports" ]]; then
+      while IFS= read -r module; do
+        [[ -f "$module" && "$module" == *.ncs.compile ]] || err 'Invalid portable import manifest'
+        with_log compiler validate interpreter "$module" validate-library
+      done < "$native.portable-imports"
+      with_log compiler validate interpreter "$native" validate-library
+    fi
+  else
+    if [[ "$target" == ELF || "$target" == SO ]]; then tool="${NCS_LINUX_CC:-cc}"; strip_tool=strip; else tool="${NCS_WINDOWS_CC:-x86_64-w64-mingw32-gcc}"; strip_tool=x86_64-w64-mingw32-strip; fi
+    command -v "$tool" >/dev/null || err "Missing native backend $tool"
+    if [[ "$source" == *.ncs.compile ]]; then
+      with_log compiler lower interpreter "$source" lower "$work/output.c"
+    else
+      with_log compiler compile compiler "$source" "$work/output.c"
+    fi
+    [[ -s "$work/output.c" ]] || err 'Compiler produced no native source'
+    if grep -qx 'NCS_STAGE4_RUST_BRIDGE_V1' "$work/output.c"; then err 'Legacy bridge request rejected'; fi
+    local -a runtime_link=() runtime_visibility=()
+    local runtime_hash=none
+    if [[ -f "$work/output.c.structured" ]]; then
+      [[ "$(cat -- "$work/output.c.structured")" == structured-v1 ]] || err 'Unrecognized structured-runtime ABI'
+      local runtime_platform=linux runtime_archive runtime_flags_line
+      if [[ "$target" == DLL || "$target" == EXE ]]; then runtime_platform=windows; fi
+      runtime_archive="$BIN/libncs_structured_${runtime_platform}.a"
+      need "$runtime_archive"
+      need "$BIN/structured-${runtime_platform}.libs"
+      runtime_link+=("$runtime_archive")
+      runtime_hash="$(sha256sum < "$runtime_archive")"
+      while IFS= read -r runtime_flags_line; do
+        [[ "$runtime_flags_line" =~ ^-l[:A-Za-z0-9_.+\-]+$ || "$runtime_flags_line" == -pthread ]] || err 'Invalid runtime native-library flag'
+        runtime_link+=("$runtime_flags_line")
+      done < "$BIN/structured-${runtime_platform}.libs"
+      if [[ "$runtime_platform" == linux ]]; then runtime_visibility+=('-Wl,--exclude-libs,ALL'); else runtime_visibility+=('-Wl,--exclude-all-symbols'); fi
+      if [[ "$source" == "$(realpath -m -- "$ROOT/logger/ncs_logger.ncs")" && ( "$target" == SO || "$target" == DLL ) ]]; then err 'Private logger must be an executable'; fi
+    fi
+    : > "$work/ncs_module_names.h"
+    local -a flags=(-std=c11 -O3 -flto -ffunction-sections -fdata-sections -Wl,--gc-sections) files=("$work/output.c")
+    case "$target" in
+      SO) flags+=(-shared -fPIC);;
+      DLL) flags+=(-shared -static-libgcc -Wl,--no-insert-timestamp);;
+      ELF|EXE) if [[ "$target" == EXE ]]; then flags+=(-static-libgcc -Wl,--no-insert-timestamp); fi; printf 'extern int ncs_run(void);\nint main(void) { return ncs_run(); }\n' > "$work/entry.c"; files+=("$work/entry.c");;
+    esac
+    # The NCS frontend owns parsing, selection and emission. This shell links
+    # generated translation units and validates/copies imported binary modules.
+    # The module-name manifest contains identifiers; an optional per-module
+    # external manifest is a literal path, never executable shell/linker input.
+    local -a deps=() dep_names=() link_flags=()
+    local -A seen_modules=()
+    if [[ -s "$work/output.c.modules" ]]; then
+      command -v sha256sum >/dev/null || err 'sha256sum required for module identity'
+      if [[ "$target" == ELF || "$target" == SO ]]; then
+        lib_ext=so
+        link_flags+=('-Wl,-rpath,$ORIGIN')
+      else
+        lib_ext=dll
+      fi
+      tool_hash="$("$tool" --version | sha256sum)"
+      while IFS= read -r namespace; do
+        [[ "$namespace" =~ ^[a-zA-Z_][a-zA-Z0-9_]*$ ]] || err 'Invalid NCS module manifest'
+        [[ -z "${seen_modules[$namespace]+x}" ]] || err 'Duplicate NCS module manifest entry'
+        seen_modules[$namespace]=1
+        lib_source="$work/output.c.module.$namespace.c"
+        local external_manifest="$work/output.c.module.$namespace.external" external_file='' external_format='' external_hash='' external_kind='' symbols=''
+        if [[ -f "$external_manifest" ]]; then
+          [[ -f "$work/output.c.structured" ]] || err 'External modules require the structured backend'
+          [[ ! -L "$external_manifest" && ! -e "$lib_source" ]] || err 'Ambiguous module manifest'
+          external_file="$(cat -- "$external_manifest")"
+          [[ "$external_file" != *$'\n'* && -f "$external_file" ]] || err 'Invalid external module path'
+          case "$external_file" in
+            *.ncs.compile) external_kind=ncs.compile;;
+            *.so) external_kind=so;;
+            *.dll) external_kind=dll;;
+            *) err 'Unsupported external module type';;
+          esac
+          external_file="$(realpath -- "$external_file")"
+          case "$external_kind" in
+            ncs.compile)
+              cmp -s -n 8 -- "$external_file" <(printf NCSBC002) || err 'Imported portable library must use NCSBC002 callable format'
+              with_log compiler lower interpreter "$external_file" lower "$lib_source"
+              [[ "$(cat -- "$lib_source.structured")" == structured-v1 ]] || err 'Portable module lacks callable ABI'
+              ;;
+            so|dll)
+              [[ "$external_kind" == "$lib_ext" ]] || err "Module $external_file is incompatible with target $target"
+              local inspector=objdump
+              if [[ "$lib_ext" == dll ]]; then inspector=x86_64-w64-mingw32-objdump; fi
+              command -v "$inspector" >/dev/null || err "Missing module inspector $inspector"
+              external_format="$(LC_ALL=C "$inspector" -f -- "$external_file")" || err 'Invalid native library'
+              if [[ "$lib_ext" == so ]]; then
+                [[ "$external_format" == *'file format elf64-x86-64'* && "$external_format" == *DYNAMIC* ]] || err 'Expected x86-64 ELF shared library'
+                # Reject a renamed PIE executable or object file. ELF libraries
+                # can have dependencies, but must not have a program interpreter.
+                local elf_headers
+                elf_headers="$(LC_ALL=C readelf -lW -- "$external_file")" || err 'Cannot inspect ELF library'
+                if grep -Eq '^[[:space:]]*INTERP[[:space:]]' <<< "$elf_headers"; then err 'Expected shared library, not ELF executable'; fi
+                symbols="$(LC_ALL=C nm -D --defined-only -- "$external_file")" || err 'Cannot inspect module exports'
+                grep -Eq '[[:space:]][TW][[:space:]]+ncs_module_call_v1$' <<< "$symbols" || err 'Module lacks NCS callable ABI v1'
+              else
+                [[ "$external_format" == *'file format pei-x86-64'* ]] || err 'Expected x86-64 PE DLL'
+                symbols="$(LC_ALL=C "$inspector" -p -- "$external_file")" || err 'Cannot inspect DLL exports'
+                grep -Eq '^[[:space:]]*DLL[[:space:]]*$' <<< "$symbols" || err 'Expected PE DLL flag'
+                # GNU objdump has used both the old ordinal-only and the
+                # newer +base/ordinal/hint output formats for this table.
+                grep -Eq '^[[:space:]]*\[[[:space:]]*[0-9]+\][[:space:]]+(\+base\[[[:space:]]*[0-9]+\][[:space:]]+[[:xdigit:]]+[[:space:]]+)?ncs_module_call_v1[[:space:]]*$' <<< "$symbols" || err 'Module lacks NCS callable ABI v1'
+              fi
+              external_hash="$(sha256sum < "$external_file")"; external_hash="${external_hash%% *}"
+              lib="ncsmod_${external_hash:0:32}_${namespace}.$lib_ext"
+              lib_path="$work/$lib"
+              cp -- "$external_file" "$lib_path"
+              ;;
+            *) err 'Unsupported external module type';;
+          esac
+        fi
+        if [[ -z "$external_hash" ]]; then
+          [[ -f "$lib_source" && ! -L "$lib_source" && -s "$lib_source" ]] || err 'Missing generated module source'
+          # Deterministic content-addressed name avoids replacing another program's
+          # dependency. Only safe characters reach SONAME / import-library flags.
+          digest="$( { printf '%s\n' "$lib_ext" "$tool_hash" "$runtime_hash" "${NCS_STRIP:-1}" "module-link-v2"; cat -- "$lib_source"; } | sha256sum)"
+          digest="${digest%% *}"
+          lib="ncsmod_${digest:0:32}_${namespace}.$lib_ext"
+          lib_path="$work/$lib"
+          if [[ "$lib_ext" == so ]]; then
+            "$tool" -std=c11 -O3 -flto -fPIC -shared -ffunction-sections -fdata-sections -Wl,--gc-sections -Wl,-soname,"$lib" "$lib_source" "${runtime_link[@]}" "${runtime_visibility[@]}" -o "$lib_path"
+            if [[ ! -f "$work/output.c.structured" ]]; then deps+=("$lib_path"); fi
+          else
+            "$tool" -std=c11 -O3 -flto -frandom-seed="${digest:0:32}" -static-libgcc -shared -ffunction-sections -fdata-sections -Wl,--gc-sections -Wl,--no-insert-timestamp "$lib_source" "${runtime_link[@]}" "${runtime_visibility[@]}" -Xlinker --out-implib -Xlinker "$work/$lib.a" -o "$lib_path"
+            if [[ ! -f "$work/output.c.structured" ]]; then deps+=("$work/$lib.a"); fi
+          fi
+          if [[ "${NCS_STRIP:-1}" != 0 ]] && command -v "$strip_tool" >/dev/null; then
+            "$strip_tool" --strip-unneeded "$lib_path" || err 'Module strip failed'
+          fi
+        fi
+        final_lib="$(dirname -- "$output")/$lib"
+        [[ "$final_lib" != "$output" ]] || err 'Module name collides with main output'
+        [[ ! -L "$final_lib" ]] || err 'Refusing a symlink dependency destination'
+        if [[ -e "$final_lib" ]] && ! cmp -s -- "$lib_path" "$final_lib"; then
+          # PE/LTO builds may vary even for an identical recipe. Structured
+          # modules resolve their basename dynamically; use a binary-content
+          # identity for a differing build rather than replacing an existing DLL.
+          [[ -f "$work/output.c.structured" && -z "$external_hash" ]] || err "Existing module has a different binary: $final_lib"
+          local actual_hash
+          actual_hash="$(sha256sum < "$work/$lib")"; actual_hash="${actual_hash%% *}"
+          local alternate="ncsmod_${actual_hash:0:32}_${namespace}.$lib_ext"
+          [[ "$alternate" != "$lib" ]] || err "Existing module has a different binary: $final_lib"
+          mv -- "$work/$lib" "$work/$alternate"
+          lib="$alternate"
+          final_lib="$(dirname -- "$output")/$lib"
+          [[ ! -L "$final_lib" ]] || err 'Refusing a symlink dependency destination'
+          [[ ! -e "$final_lib" ]] || cmp -s -- "$work/$lib" "$final_lib" || err "Existing module has a different binary: $final_lib"
+        fi
+        printf '#define NCS_DEP_%s "%s"\n' "$namespace" "$lib" >> "$work/ncs_module_names.h"
+        dep_names+=("$lib")
+      done < "$work/output.c.modules"
+    fi
+    native="$work/out.$ext"
+    "$tool" "${flags[@]}" "${files[@]}" "${deps[@]}" "${link_flags[@]}" "${runtime_link[@]}" "${runtime_visibility[@]}" -o "$native"
+    if [[ "${NCS_STRIP:-1}" != 0 ]] && command -v "$strip_tool" >/dev/null; then
+      candidate="$native.strip"; cp -- "$native" "$candidate"
+      if "$strip_tool" --strip-unneeded "$candidate"; then mv -f -- "$candidate" "$native"; fi
+    fi
+  fi
+  [[ -s "$native" ]] || err 'Empty compiler output'
+  if [[ "$target" != COMPILE ]]; then
+    for lib in "${dep_names[@]}"; do
+      final_lib="$(dirname -- "$output")/$lib"
+      [[ ! -L "$final_lib" ]] || err 'Refusing a symlink dependency destination'
+      if ! ln -- "$work/$lib" "$final_lib" 2>/dev/null; then
+        [[ -f "$final_lib" && ! -L "$final_lib" ]] && cmp -s -- "$work/$lib" "$final_lib" || err "Cannot publish module $lib"
+      fi
+    done
+  fi
+  mv -f -- "$native" "$output"
+  printf 'NCS compiled %s -> %s\n' "$source" "$output"
+}
+parse_run() {
+  FILE=''
+  while (($#)); do
+    case "$1" in
+      --no-log) export NCS_LOG_LEVEL=0;;
+      -L[0-4]) export NCS_LOG_LEVEL="${1:2}";;
+      -*) err "Unknown option $1";;
+      *) [[ -z "$FILE" ]] || err 'One input file expected'; FILE="$1";;
+    esac
+    shift
+  done
+  [[ -f "$FILE" ]] || err "File not found: $FILE"
+  FILE="$(realpath -- "$FILE")"
+}
+case "${1:-}" in
+  compile|compiler2) shift; compile "$@";;
+  interpret) shift; parse_run "$@"; case "$FILE" in
+    *.ncs.compile) with_log interpreter interpret interpreter "$FILE" binary;;
+    *.ncs) NCS_WORK="$(mktemp -d)"; trap 'rm -rf -- "$NCS_WORK"' EXIT; with_log interpreter interpret interpreter "$FILE" source "$NCS_WORK/active.ncs.compile";;
+    *) err 'Expected NCS source or portable file';;
+  esac;;
+  run) shift; parse_run "$@"; case "$FILE" in
+    *.so) need "$BIN/ncs-so-host"; with_log "$(basename "$FILE")" run "$BIN/ncs-so-host" "$FILE";;
+    *.dll) need "$BIN/ncs-dll-host.exe"; command -v wine >/dev/null || err 'Wine required'; with_log "$(basename "$FILE")" run wine "$BIN/ncs-dll-host.exe" "$(winepath -w "$FILE")";;
+    *.exe) command -v wine >/dev/null || err 'Wine required'; with_log "$(basename "$FILE")" run wine "$FILE";;
+    *.ncs|*.ncs.compile) err 'Use ncs interpret';;
+    *) [[ -x "$FILE" ]] || err 'Not an executable'; with_log "$(basename "$FILE")" run "$FILE";;
+  esac;;
+  log) shift; [[ $# == 4 && "$1" =~ ^[1-4]$ ]] || err 'log requires LEVEL SOURCE TAG MESSAGE'; log_event "$@";;
+  repl|'')
+    [[ $# == 0 || ( $# == 1 && "$1" == repl ) ]] || err 'repl takes no arguments'
+    need "$BIN/ncs_interpreter.elf"
+    NCS_INTERPRETER_MODE=repl NCS_INTERPRETER_INPUT= NCS_INTERPRETER_SOURCE_DIR="$PWD" NCS_INTERPRETER_GLOBAL_DIR="$NCS_GLOBAL" "$BIN/ncs_interpreter.elf";;
+  help|--help|-h) usage;;
+  *.ncs|*.ncs.compile) [[ $# == 1 ]] || err 'One input file expected'; exec "$SELF" interpret "$1";;
+  *) err 'Unknown command; use ncs help';;
+esac
