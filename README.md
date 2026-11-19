@@ -11,11 +11,10 @@ NCS is a proprietary, node-based programming language designed around structured
 - Stack-based data and memory management.
 - Detailed compiler and runtime logging.
 - Native shared-library compilation, with cross-platform support as a development goal.
-- A long-term goal of self-hosted compilation.
 
 ## Development Status
 
-NCS is under active development. Its initial compiler is built in Rust, with the goal of transitioning to a compiler written in NCS itself.
+NCS is under active development. It can compile itself.
 
 ## Usage and Licensing
 
