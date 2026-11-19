@@ -1,4 +1,4 @@
-![NCS logo](NCS/icons/rendered/ncs.png)
+![NCS logo](NCS/icons/rendered/NCS.png)
 
 # About NCS
 
