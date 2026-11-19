@@ -6,7 +6,7 @@ All rights reserved except as expressly granted below.
 
 ## 1. Permission to Use
 
-Permission is granted to use authorized copies of the Node Container System (NCS) to create, compile, and run modules, libraries, programs, games, and tools, provided that such use does not modify the NYXORA runtime and complies with this license.
+Permission is granted to use authorized copies of the Node Container System (NCS) to create, compile, and run modules, libraries, programs, games, and tools, provided that such use does not modify the NCS runtime and complies with this license.
 
 ## 2. Restrictions
 
@@ -14,7 +14,7 @@ Without express written permission from the copyright holder, you may not:
 
 - Access, view, study, or reproduce the nonpublic source code of NCS.
 - Sell, modify, decompile, disassemble, reverse engineer, or redistribute the NCS compiler, interpreter, or logger, in whole or in part.
-- Modify, redistribute, or replace the NYXORA runtime.
+- Modify, redistribute, or replace the NCS runtime.
 - Bundle NCS itself with independently distributed software.
 
 These restrictions apply to the extent permitted by applicable law and do not override rights that cannot lawfully be restricted.
