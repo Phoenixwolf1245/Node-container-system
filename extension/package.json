@@ -1,8 +1,8 @@
 {
   "name": "ncs-language",
   "displayName": "NCS Language Support",
-  "description": "NCS editor palette, diagnostics, modular node catalog, function context and symbol navigation.",
-  "version": "0.12.0",
+  "description": "NCS language editing, diagnostics, and native interpreter integration.",
+  "version": "0.13.0",
   "publisher": "ncs-local",
   "private": true,
   "license": "MIT",
@@ -21,7 +21,10 @@
     "onCommand:ncs.insertClosingSignature",
     "onCommand:ncs.inspectEditor",
     "onCommand:ncs.applyTheme",
-    "onCommand:ncs.enableDark2026"
+    "onCommand:ncs.enableDark2026",
+    "onLanguage:ncs-compiled",
+    "onCommand:ncs.runFile",
+    "onCustomEditor:ncs.compiledInterpreter"
   ],
   "contributes": {
     "languages": [
@@ -91,6 +94,11 @@
       {
         "command": "ncs.enableDark2026",
         "title": "NCS: Enable Dark 2026 Support"
+      },
+      {
+        "command": "ncs.runFile",
+        "title": "NCS: Run with Interpreter",
+        "icon": "$(play)"
       }
     ],
     "themes": [
@@ -436,6 +444,18 @@
           "type": "boolean",
           "default": true,
           "description": "Show compact matrix, still-image and WAV waveform previews beside their declarations."
+        },
+        "ncs.interpreterExecutable": {
+          "type": "string",
+          "default": "",
+          "scope": "machine",
+          "description": "Installed NCS launcher executable; blank uses /usr/bin/ncs, Program Files/NCS/ncs.exe or PATH."
+        },
+        "ncs.autoRunCompiled": {
+          "type": "boolean",
+          "default": true,
+          "scope": "machine",
+          "description": "Run a .ncs.compile file when opened in the NCS custom editor in a trusted workspace. Disable to inspect without execution."
         }
       }
     },
@@ -559,12 +579,66 @@
           "command": "ncs.previewMedia",
           "when": "editorLangId == ncs",
           "group": "navigation@90"
+        },
+        {
+          "command": "ncs.runFile",
+          "when": "editorLangId == ncs",
+          "group": "navigation@1"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "ncs.runFile",
+          "when": "editorLangId == ncs",
+          "group": "navigation@1"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "ncs.runFile",
+          "when": "resourceFilename =~ /\\.ncs(\\.compile)?$/",
+          "group": "navigation@1"
         }
       ]
+    },
+    "customEditors": [
+      {
+        "viewType": "ncs.compiledInterpreter",
+        "displayName": "NCS Compiled Interpreter",
+        "selector": [
+          {
+            "filenamePattern": "*.ncs.compile"
+          }
+        ],
+        "priority": "default"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "ncs.runFile",
+        "key": "f5",
+        "when": "editorLangId == ncs && !inDebugMode"
+      },
+      {
+        "command": "ncs.runFile",
+        "key": "ctrl+f5",
+        "when": "editorLangId == ncs && !inDebugMode"
+      }
+    ]
+  },
+  "icon": "icons/ncs-extension.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Phoenixwolf1245/Node-container-system.git"
+  },
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": "limited",
+      "description": "Editing is supported; running NCS code requires workspace trust.",
+      "restrictedConfigurations": [
+        "ncs.interpreterExecutable",
+        "ncs.autoRunCompiled"
+      ]
     }
-  },
-  "scripts": {
-    "test": "node test-context.js && node test-v05.js && node test-theme-support.js && node test-comments.js"
-  },
-  "icon": "icons/ncs-extension.png"
+  }
 }

@@ -14,21 +14,21 @@ The extension is the recommended core tool for developing NCS programs in Visual
 - Live structural and type diagnostics, including protected-node warnings and tagged log hover.
 - Modular node catalog discovery and custom-mode snippets.
 - Color pickers, matrix summaries and local media previews, including experimental syntax.
-- Icon-preserving installation and NCS-specific editor settings.
+- NCS file icons and NCS-specific editor settings.
 
 ## Installation
 
-1. Extract the extension ZIP and close Visual Studio Code.
-2. From the extraction directory, run:
+Install NCS separately using the Linux Debian package or Windows setup executable. Install this extension using **Extensions: Install from VSIX...** or `code --install-extension ncs-language-0.13.0.vsix`.
 
-   ```bash
-   bash ncs-vscode-language/install.sh
-   ```
+After reopening VS Code, run **NCS: Enable Dark 2026 Support** if desired.
 
-3. Reopen VS Code and open the Command Palette (`Ctrl+Shift+P`).
-4. Run **NCS: Enable Dark 2026 Support**.
+## Run with the interpreter
 
-The installer backs up previous NCS extensions and preserves custom icons and manifest icon assignments, including `.ncs.compile` where registered. It does not change Linux MIME icons.
+- Open a saved `.ncs` source file and use the Run button, F5, Ctrl+F5, or **NCS: Run with Interpreter**. Unsaved edits are saved first.
+- Opening `.ncs.compile` uses the dedicated read-only compiled-file editor and starts `ncs interpret` in the task terminal. Select **Run again** to repeat the program.
+- Only trusted workspaces can execute NCS code. Opening a compiled file can execute arbitrary code; disable `ncs.autoRunCompiled` to open without executing. VS Code may separately enforce workspace trust or file associations.
+- Set `ncs.interpreterExecutable` in user settings if the installed `ncs` launcher is not in the standard location or PATH. No compiler or interpreter binary is embedded in this extension.
+- The NCS task terminal supports interactive input. The extension does not intercept commands supplied by other runner extensions.
 
 ## Editor configuration
 
@@ -84,6 +84,12 @@ The extension can discover data-only catalog definitions from:
 Catalog metadata supports `test` and `info` fields. The custom-mode snippet generates required schema fields. No JavaScript or custom handler code is executed by the catalog. Reload VS Code after global catalog updates. Compiler support for custom handlers remains separate.
 
 ## Version history
+
+### v0.13 — Interpreter integration
+
+- Run source files and open portable compiled files through the installed interpreter.
+- Runtime-only distribution excludes test fixtures and developer scripts.
+
 
 ### v0.10 — Stage 6 structural and type diagnostics
 

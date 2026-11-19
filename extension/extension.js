@@ -10,6 +10,7 @@ const navigation=require('./lib/navigation');
 const {inLiteralOrComment}=require('./lib/comment-boundaries');
 function activate(context) {
   editorSupport.register(context);
+  require("./lib/run").register(context);
   require("./lib/media").register(context);
   require("./lib/inline-preview").register(context);
   context.subscriptions.push(vscode.commands.registerTextEditorCommand('ncs.wrapSelectionInNode', async (editor, edit) => {
