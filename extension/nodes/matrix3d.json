@@ -1,9 +1,0 @@
-{
-  "name": "matrix3d",
-  "signature": true,
-  "label": "Matrix3d (planned)",
-  "planned": true,
-  "definition": "A list of 2D matrices; format candidate, renderer deferred.",
-  "template": "<${1:volume}>[[[${2:1|2}]|[${3:3|4}]]]</matrix3d>$0",
-  "example": "<volume>[[[1|2]|[3|4]]]</matrix3d>"
-}

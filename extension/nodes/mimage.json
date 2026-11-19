@@ -1,9 +1,0 @@
-{
-  "name": "mimage",
-  "signature": true,
-  "label": "Moving image (planned)",
-  "planned": true,
-  "definition": "Moving image without audio. Subdata1 is the file format.",
-  "template": "<${1:video}>\"${2:video.mp4}\"</mimage(${3:mp4})>$0",
-  "example": "<video>\"video.mp4\"</mimage(mp4)>"
-}

@@ -1,9 +1,0 @@
-{
-  "name": "import",
-  "label": "Import native library",
-  "planned": false,
-  "definition": "Import a complete NCS file or compatible native library.",
-  "detail": "Stage 5 bootstrap supports source files and compatible native libraries. Uses a separate output-platform library; initial ABI exports self-contained zero-argument scalar functions. Compiler2 and compiler3 require the explicit Rust bridge for full-language support.",
-  "template": "<import|\"${1:library.ncs}\"/import>$0",
-  "example": "<import|\"library.ncs\"/import>"
-}

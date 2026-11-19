@@ -1,9 +1,0 @@
-{
-  "name": "image",
-  "signature": true,
-  "label": "Image (planned)",
-  "planned": true,
-  "definition": "Embedded image path with media-format parameter; compiler planned.",
-  "template": "<${1:picture}>\"${2:image.png}\"</image(${3:png})>$0",
-  "example": "<picture>\"image.png\"</image(png)>"
-}

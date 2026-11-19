@@ -1,9 +1,0 @@
-{
-  "name": "vector",
-  "signature": true,
-  "label": "Vector (planned)",
-  "planned": true,
-  "definition": "Ordered numeric components; compiler planned.",
-  "template": "<${1:vector}>[${2:1|2|3}]</vector>$0",
-  "example": "<position>[1|2|3]</vector>"
-}
