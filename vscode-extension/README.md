@@ -1,22 +1,67 @@
-# NCS Language Support 0.7
+![NCS logo](NCS/icons/rendered/ncs.png)
 
-Install: extract the ZIP, close VS Code, then run `bash ncs-vscode-language/install.sh` from the extraction directory. The installer backs up previous NCS extensions and preserves existing custom icon files and manifest icon assignments, including `.ncs.compile` where registered. It does not change Linux MIME icons. Reopen VS Code and run **NCS: Enable Dark 2026 Support** (`Ctrl+Shift+P`). This selects VS Code's built-in Dark 2026 theme and enables the NCS semantic palette with language-specific color rules. It preserves existing color rules for other languages. The extension also contributes Dark 2026 NCS-only defaults; the command repairs conflicting user settings explicitly. Workspace-level overrides or competing extensions can still take precedence. For a different theme run **NCS: Apply NCS Colors** and choose **Keep current theme and apply NCS colors**; the standalone NCS Dark v0.6 theme remains optional. The command writes NCS-specific settings into the active VS Code profile's user settings, not into project source. It enables NCS semantic highlighting, disables rainbow brackets, and turns off minimap section headers only for NCS. Colors use semantic tokens and scoped TextMate fallback rules, not whole-document decorations. Only color values retain swatch decorations. Actual editor/minimap rendering depends on VS Code. For troubleshooting, click the NCS v0.7 status bar.
+# NCS Visual Studio Code Helper
 
-## v0.7 comment fix
+The official core development extension for the **Node Container System (NCS)**.
 
-Inline `!{...}` comments stop at their closing brace, including when ordinary prose contains contractions such as `Don’t` or `Don't`. Complete quoted spans may contain braces. Endline `!<--` comments still extend to the end of the line; triple-quote documentation is unchanged. Highlighting, the fallback grammar, source diagnostics and editor context share the comment boundary rule. The compiler is unchanged.
+NCS is a node-based programming language designed around named data containers, typed signatures, stack-based execution, compilation and interpretation. The NCS Visual Studio Code Helper provides the editor integration intended for programming in NCS, including language-aware highlighting, diagnostics, navigation, completion and data previews.
 
-## New language support
+The extension is the recommended core tool for developing NCS programs in Visual Studio Code. It is not the NCS compiler, interpreter or runtime and does not replace compiler validation. Other editors may be used to write NCS source files.
 
-* Blue node declarations and user calls, lime signatures, white references, reddish-orange system calls/modes, purple f-strings and `in`, `range`, `continue`, `break`; yellow operators and brackets, gray node delimiters, green regular comments, orange docs and strings. Numbers use muted green; booleans purple. Dotted callable names color only their last part as a call; parents are white.
-* Hierarchical Outline using true `DocumentSymbol.children` and number/string/object icons; deepest exact qualified-path hover, local Go to Definition, basic Find References, completion and signature help. This is still source-local, not a full language server. Hover descendants of locked nodes displays a bold locked warning.
-* Live source checks for your malformed math and integer-input examples plus previous diagnostics. Source checking is conservative and not a substitute for the compiler.
+## Features
 
-## Editor-only planned media signatures
+- NCS-specific semantic highlighting and TextMate fallback grammar.
+- Dark 2026 integration and optional standalone NCS Dark theme.
+- Hierarchical node outline, qualified-path hover, local definition and reference navigation, completion and signature help.
+- Live structural and type diagnostics, including protected-node warnings and tagged log hover.
+- Modular node catalog discovery and custom-mode snippets.
+- Color pickers, matrix summaries and local media previews, including experimental syntax.
+- Icon-preserving installation and NCS-specific editor settings.
 
-The following are proposed **preview syntax**, not yet runtime signatures. Color uses hex RGB or RGBA (alpha 00 transparent, FF opaque); grayscale/luminance can be derived from RGB, so it needn't be a separate channel. Color values show their actual swatch and editable color picker. Numeric matrices use a literal list of lists; 3D matrix rendering is deferred.
+## Installation
 
-```
+1. Extract the extension ZIP and close Visual Studio Code.
+2. From the extraction directory, run:
+
+   ```bash
+   bash ncs-vscode-language/install.sh
+   ```
+
+3. Reopen VS Code and open the Command Palette (`Ctrl+Shift+P`).
+4. Run **NCS: Enable Dark 2026 Support**.
+
+The installer backs up previous NCS extensions and preserves custom icons and manifest icon assignments, including `.ncs.compile` where registered. It does not change Linux MIME icons.
+
+## Editor configuration
+
+The Dark 2026 command selects VS Code's built-in Dark 2026 theme and enables the NCS semantic palette. To retain another theme, run **NCS: Apply NCS Colors** and select **Keep current theme and apply NCS colors**. NCS Dark v0.6 remains optional.
+
+The commands update NCS-specific user settings in the active VS Code profile, not project source. They preserve other languages' color rules, enable semantic highlighting, disable rainbow brackets and turn off minimap section headers for NCS. Workspace overrides and competing extensions may take precedence. Highlighting uses semantic tokens and scoped TextMate rules; only color values retain swatch decorations. Actual editor and minimap rendering depends on VS Code. Click the NCS status bar for troubleshooting.
+
+### Color palette
+
+| Element | Color |
+|---|---|
+| Node declarations and user calls | Blue |
+| Signatures | Lime |
+| References | White |
+| System calls and modes | Reddish-orange |
+| F-strings, control keywords and booleans | Purple |
+| Operators and brackets | Yellow |
+| Node delimiters | Gray |
+| Regular comments | Green |
+| Documentation and strings | Orange |
+| Numbers | Muted green |
+
+Dotted callable names highlight only the final callable component as a call; parent components remain white.
+
+## Media and matrix previews
+
+Place the cursor inside a node and run **NCS: Preview Media or Matrix** from the Command Palette or editor context menu.
+
+The following examples include proposed editor-preview syntax. Runtime support varies; editor recognition does not imply compiler support.
+
+```ncs
 <tint>"#FF660080"</color>
 <photo>"assets/photo.png"</image(png)>
 <moving>"assets/animation.gif"</image(gif)>
@@ -27,31 +72,64 @@ The following are proposed **preview syntax**, not yet runtime signatures. Color
 <volume>[[[1|2]|[3|4]]|[[5|6]|[7|8]]]</matrix3d>
 ```
 
-Place the cursor inside the node and run **NCS: Preview Media or Matrix** from the Command Palette or editor context menu. A compact side preview shows the picture/animation/video/audio or rectangular table. Audio waveform is live while playing; video without `|sound` is muted. Browser codec availability limits supported files. Files are local to the workspace or source folder; no remote content is fetched. Media paths are resolved relative to the source file. No media is embedded or executed by the compiler yet. Future compiler implementation should preserve source format and support embedded assets, rather than making import directives necessary. Direct inline thumbnail playback and 3D render are not included.
+Colors support RGB/RGBA hex values with alpha `00` transparent and `FF` opaque. Grayscale can be derived from RGB. Numeric matrices use nested lists. The side preview supports images, animations, audio, video and rectangular tables, subject to browser codec availability. Audio waveforms are live during playback; video without `|sound` is muted. Media is resolved relative to the source file, restricted to local workspace/source-folder files, and no remote content is fetched. Inline static previews are enabled by default via `ncs.previews.inline`; they provide matrix summaries, still-image attachments and PCM WAV peak waveforms without modifying source text. Arbitrary inline webviews, direct inline playback and 3D rendering are not included. Native attachment sizing remains unverified. Media embedding and execution by the compiler are not established by these previews.
 
-Modular catalog: add JSON definitions in `.ncs/nodes/` as before. Built-in modules describe import/from/use and new planned signatures. No JavaScript is run from node catalog files. Stage 5 compiler module support is limited to bootstrap. Tests: `npm test`; actual UI/preview codecs require VS Code.
+## Modular node catalog
 
-## v0.8 / Stage 6
+The extension can discover data-only catalog definitions from:
 
-Matrix signatures `matrix(x,y)`, immutable suffix `&immut`, matrix queries and modification, and tagged log hover support. The custom-mode snippet creates required schema fields. The catalog can load data-only `test` / `info` metadata from top-level `</node>` declarations in direct workspace imports/from, `.ncs/nodes/*.ncs`, or `${XDG_DATA_HOME:-$HOME/.local/share}/ncs/nodes/*.ncs`. No custom code is executed. Custom handler execution is not yet implemented by the compiler. Existing Dark 2026 support and icon-preserving installation are unchanged. Reload after global catalog updates.
+- `.ncs/nodes/*.json` and `.ncs/nodes/*.ncs`
+- Direct workspace imports/from containing top-level `</node>` declarations
+- `${XDG_DATA_HOME:-$HOME/.local/share}/ncs/nodes/*.ncs`
+- Workspace `Globus/` and the location specified by `NCS_GLOBUS`
 
-## v0.9 / Stage 6 revision
+Catalog metadata supports `test` and `info` fields. The custom-mode snippet generates required schema fields. No JavaScript or custom handler code is executed by the catalog. Reload VS Code after global catalog updates. Compiler support for custom handlers remains separate.
 
-- Structural error diagnostics for missing and malformed closers (including match), nameless nodes and unclosed blocks; yellow warnings for unsigned data nodes.
-- `$name` is unique; `$signature` enforces the type rather than freezing the data. `&immut` stores immutable data.
-- Math diagnostics enforce one quoted string or f-string, including matrix math.
-- `Globus/` in the workspace root, or the `NCS_GLOBUS` environment variable, is included in catalog discovery.
-- Same-file static previews (`ncs.previews.inline`, enabled by default): compact matrix row summary/hover, still-image thumbnail attachment, and PCM WAV peak waveform. No text in the source is changed. Live/audio/video and larger previews continue to use NCS: Preview Media or Matrix. VS Code does not offer a general arbitrary inline webview in its normal text editor. Native rendering of attachment sizes is unverified.
-- Existing Dark 2026 colors and icon-preserving installer remain intact.
+## Version history
 
-Run `node test-stage6-revision.js` for the new source-level diagnostics and preview-data regressions; tests do not launch VS Code.
+### v0.10 — Stage 6 structural and type diagnostics
 
-## v0.10 / Stage 6 structural and type diagnostics
+- Checks undefined bare scalar references, unquoted strings, int32 range errors, list types and positions (one-based), ordinary length mismatches (warning), forced excess capacity (error) and dictionary child restrictions.
+- Reports stray text, mismatched brackets, missing terminators, invalid branches and incorrect match counts. Missing signatures remain warnings.
+- Canonical match syntax: `|case|(value):` and `|case|_:`; use bare `pass`. Completion offers Elif, Else, Case and Default case after `<`, and case variants after `|`.
+- `is`, `or`, `not`, `as` and `pass` receive purple highlighting; this does not implement new compiler Boolean operators.
+- `samples/diagnostics-stress.ncs` intentionally contains seven errors and one warning.
 
-* Undefined bare scalar values are no longer silently accepted as arbitrary references; valid declared references, parameters, loop bindings and known imports remain accepted.
-* Unquoted string literals, int32 range errors, list type/position checks (one-based diagnostics), ordinary length mismatches (warning), forced excess capacity (error), and dictionary child shape/restrictions are checked.
-* Stray text, mismatched brackets, missing terminators, invalid branch syntax and incorrect match counts are flagged. Missing signatures remain warnings.
-* Canonical match form is `|case|(value):` / `|case|_:`; use bare `pass`. The `<` menu includes Elif, Else, Case and Default case, and a leading `|` also offers the latter two. `is`, `or`, `not`, `as`, and `pass` use purple syntax tokens; this is highlighting, not a new compiler implementation of Boolean operators.
-* `samples/diagnostics-stress.ncs` intentionally produces seven errors and one warning. Open it to inspect the Problems panel. Run the pure JavaScript tests with `for t in test-*.js; do node "$t"; done`.
+### v0.9 — Stage 6 revision
 
-This is source analysis, not complete cross-module type inference; runtime values, custom modes, imported symbols and complex function flows still require the compiler/runtime. Existing protection checks intentionally highlight deliberately invalid code inside try/catch blocks.
+- Structural diagnostics for missing/malformed closers, nameless nodes and unclosed blocks; unsigned data nodes produce warnings.
+- `$name` is unique; `$signature` enforces the type, while `&immut` stores immutable data.
+- Math diagnostics require one quoted string or f-string, including matrix math.
+- Added Globus catalog discovery and inline static previews.
+
+### v0.8 — Stage 6
+
+- Matrix signatures `matrix(x,y)`, `&immut`, matrix queries and modifications, and tagged log hover.
+- Custom-mode snippets and data-only catalog metadata discovery.
+- Dark 2026 integration and icon-preserving installation retained.
+
+### v0.7 — Comment handling and editor support
+
+- Inline `!{...}` comments end at the closing brace, including prose contractions; complete quoted spans may contain braces.
+- Endline `!<--` comments extend to the end of the line; triple-quote documentation is unchanged.
+- Highlighting, fallback grammar, diagnostics and editor context share comment boundaries.
+- Hierarchical outline, qualified-path hover, local navigation, completion, signature help and conservative math/input diagnostics.
+- Experimental media and matrix previews and modular catalogs. Stage 5 compiler module support was limited to bootstrap.
+
+## Testing and limitations
+
+```bash
+npm test
+node test-stage6-revision.js
+for t in test-*.js; do node "$t"; done
+```
+
+The JavaScript tests cover source-level diagnostics and preview data, but do not launch VS Code. Actual rendering and media codecs require VS Code testing. Source analysis is not a full language server or complete cross-module type inference. Runtime values, imported symbols, custom modes and complex function flows still require compiler/runtime validation. Protection diagnostics can intentionally highlight invalid code inside try/catch blocks.
+
+## License
+
+The NCS Visual Studio Code Helper is open-source software licensed under the [MIT License](LICENSE.md).
+
+The MIT License applies to this extension and its associated documentation only. The NCS language implementation, compiler, interpreter, logger and runtime are separate proprietary software and are not licensed under the extension's MIT License.
+
+Copyright (c) 2026 Phoenixwolf1245 and NCS contributors.
