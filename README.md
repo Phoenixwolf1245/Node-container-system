@@ -24,3 +24,7 @@ You may use NCS to develop independent programs, games, tools, libraries, and mo
 - [NCS Proprietary Software License](LICENSE.md)
 
 Copyright (c) 2026 Phoenixwolf1245.
+
+## Requirements for windows
+- MSYS2 MINGW64
+
