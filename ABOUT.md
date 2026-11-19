@@ -6,7 +6,7 @@
 
 NCS is designed to combine compiled and interpreted execution with structured data containers, stack-based execution, efficient memory management, and detailed debugging through execution logs.
 
-## Project Goals
+## Project Goals - Completed.
 
 - Provide a structured, readable node-based syntax.
 - Compile programs into native libraries for supported platforms.
@@ -16,7 +16,7 @@ NCS is designed to combine compiled and interpreted execution with structured da
 
 ## Development
 
-The initial NCS bootstrap compiler is written in Rust. The long-term goal is to build the compiler and interpreter using NCS itself. The project is under development, and features may change as the language evolves.
+The initial NCS bootstrap was built in Rust. It is no longer used.
 
 ## Developer
 
