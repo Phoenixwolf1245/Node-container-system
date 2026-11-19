@@ -1,0 +1,8 @@
+-lkernel32
+-lntdll
+-luserenv
+-lws2_32
+-ldbghelp
+-lkernel32
+-lbcrypt
+-lkernel32

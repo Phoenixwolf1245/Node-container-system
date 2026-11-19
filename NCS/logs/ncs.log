@@ -1,0 +1,208 @@
+[2026|11|18|23:02:24:386]program: interpreter has started with the following command: ncs_run()
+[2026|11|18|23:02:24:386][interpreter]Startup sequence complete, no errors.
+[2026|11|18|23:02:24:386][interpreter]Execution stack 1 has executed node 4 at[line4|§1|indent0|sp0]
+[2026|11|18|23:02:24:386][interpreter]Execution stack 2 has executed node 9 at[line9|§1|indent0|sp0]
+[2026|11|18|23:02:24:386][interpreter]Execution stack 3 has executed node 12 at[line12|§1|indent0|sp0]
+[2026|11|18|23:02:24:386][interpreter]Execution stack 4 has executed node 22 at[line22|§1|indent0|sp0]
+[2026|11|18|23:02:24:386][interpreter]Execution stack 5 has executed node 37 at[line37|§1|indent0|sp0]
+[2026|11|18|23:02:24:386][interpreter]Execution stack 6 has executed node 62 at[line62|§1|indent0|sp0]
+[2026|11|18|23:02:24:386][interpreter]Execution stack 7 has executed node 70 at[line70|§1|indent0|sp0]
+[2026|11|18|23:02:24:386][interpreter]Execution stack 8 has executed node 110 at[line110|§1|indent0|sp0]
+[2026|11|18|23:02:24:386][interpreter]Execution stack 9 has executed node 115 at[line115|§1|indent0|sp0]
+[2026|11|18|23:02:24:386][interpreter]Execution stack 10 has executed node 216 at[line216|§1|indent0|sp0]
+[2026|11|18|23:02:24:386][interpreter]Execution stack 11 has executed node 240 at[line240|§1|indent0|sp0]
+[2026|11|18|23:02:24:386][interpreter]Execution stack 12 has executed node 259 at[line259|§1|indent0|sp0]
+[2026|11|18|23:02:24:386][interpreter]Execution stack 13 has executed node 272 at[line272|§1|indent0|sp0]
+[2026|11|18|23:02:24:386][interpreter]Execution stack 14 has executed node 281 at[line281|§1|indent0|sp0]
+[2026|11|18|23:02:24:386][interpreter]Execution stack 15 has executed node 284 at[line284|§1|indent0|sp0]
+[2026|11|18|23:02:24:386][interpreter]Execution stack 16 has executed node 291 at[line291|§1|indent0|sp0]
+[2026|11|18|23:02:24:386][interpreter]Execution stack 17 has executed node 385 at[line385|§1|indent0|sp0]
+[2026|11|18|23:02:24:386][interpreter]Execution stack 18 has executed node 423 at[line423|§1|indent0|sp0]
+[2026|11|18|23:02:24:386][interpreter]Node vm_c_output declared as str
+[2026|11|18|23:02:24:386][interpreter]Node vm_c_output storage at 0x622a47fa87e0, value=String("#include <stdio.h>\n#if defined(_WIN32)\n#define EXPORT __declspec(dllexport)\n#else\n#define EXPORT __attribute__((visibility(\"default\")))\n#endif\nEXPORT int ncs_run(void) {\n")
+[2026|11|18|23:02:24:387][interpreter]Execution stack 19 has executed node 424 at[line424|§1|indent0|sp0]
+[2026|11|18|23:02:24:387][interpreter]List vm_types declared with 0 entries (requested 0, forced false)
+[2026|11|18|23:02:24:387][interpreter]Execution stack 20 has executed node 425 at[line425|§1|indent0|sp0]
+[2026|11|18|23:02:24:387][interpreter]List vm_starts declared with 0 entries (requested 0, forced false)
+[2026|11|18|23:02:24:387][interpreter]Execution stack 21 has executed node 426 at[line426|§1|indent0|sp0]
+[2026|11|18|23:02:24:387][interpreter]List vm_sizes declared with 0 entries (requested 0, forced false)
+[2026|11|18|23:02:24:387][interpreter]Execution stack 22 has executed node 427 at[line427|§1|indent0|sp0]
+[2026|11|18|23:02:24:387][interpreter]Node vm_count declared as int64
+[2026|11|18|23:02:24:387][interpreter]Node vm_count storage at 0x622a47fa9540, value=Int(0)
+[2026|11|18|23:02:24:387][interpreter]Execution stack 23 has executed node 428 at[line428|§1|indent0|sp0]
+[2026|11|18|23:02:24:387][interpreter]Node vm_data_at declared as int64
+[2026|11|18|23:02:24:387][interpreter]Node vm_data_at storage at 0x622a47fa96d0, value=Int(0)
+[2026|11|18|23:02:24:387][interpreter]Execution stack 24 has executed node 429 at[line429|§1|indent0|sp0]
+[2026|11|18|23:02:24:387][interpreter]Node vm_entry_count declared as int64
+[2026|11|18|23:02:24:387][interpreter]Node vm_entry_count storage at 0x622a47fa9590, value=Int(0)
+[2026|11|18|23:02:24:387][interpreter]Execution stack 25 has executed node 430 at[line430|§1|indent0|sp0]
+[2026|11|18|23:02:24:387][interpreter]Node vm_slot_count declared as int64
+[2026|11|18|23:02:24:387][interpreter]Node vm_slot_count storage at 0x622a47faa390, value=Int(0)
+[2026|11|18|23:02:24:387][interpreter]Execution stack 26 has executed node 431 at[line431|§1|indent0|sp0]
+[2026|11|18|23:02:24:387][interpreter]Node vm_source_id declared as int64
+[2026|11|18|23:02:24:387][interpreter]Node vm_source_id storage at 0x622a47faa520, value=Int(0)
+[2026|11|18|23:02:24:387][interpreter]Execution stack 27 has executed node 432 at[line432|§1|indent0|sp0]
+[2026|11|18|23:02:24:387][interpreter]Node vm_reserve declared as int64
+[2026|11|18|23:02:24:387][interpreter]Node vm_reserve storage at 0x622a47faa4d0, value=Int(0)
+[2026|11|18|23:02:24:387][interpreter]Execution stack 28 has executed node 433 at[line433|§1|indent0|sp0]
+[2026|11|18|23:02:24:387][interpreter]Node vm_total declared as int64
+[2026|11|18|23:02:24:387][interpreter]Node vm_total storage at 0x622a47faa570, value=Int(0)
+[2026|11|18|23:02:24:387][interpreter]Execution stack 29 has executed node 434 at[line434|§1|indent0|sp0]
+[2026|11|18|23:02:24:387][interpreter]Node vm_label declared as str
+[2026|11|18|23:02:24:387][interpreter]Node vm_label storage at 0x622a47faa200, value=String("")
+[2026|11|18|23:02:24:387][interpreter]Execution stack 30 has executed node 435 at[line435|§1|indent0|sp0]
+[2026|11|18|23:02:24:387][interpreter]List vm_header_parts declared with 0 entries (requested 0, forced false)
+[2026|11|18|23:02:24:387][interpreter]Execution stack 31 has executed node 436 at[line436|§1|indent0|sp0]
+[2026|11|18|23:02:24:387][interpreter]List vm_stack_parts declared with 0 entries (requested 0, forced false)
+[2026|11|18|23:02:24:387][interpreter]Execution stack 32 has executed node 437 at[line437|§1|indent0|sp0]
+[2026|11|18|23:02:24:387][interpreter]List vm_data_parts declared with 0 entries (requested 0, forced false)
+[2026|11|18|23:02:24:387][interpreter]Execution stack 33 has executed node 438 at[line438|§1|indent0|sp0]
+[2026|11|18|23:02:24:387][interpreter]List vm_build_keys declared with 0 entries (requested 0, forced false)
+[2026|11|18|23:02:24:387][interpreter]Execution stack 34 has executed node 439 at[line439|§1|indent0|sp0]
+[2026|11|18|23:02:24:387][interpreter]List vm_build_names declared with 0 entries (requested 0, forced false)
+[2026|11|18|23:02:24:387][interpreter]Execution stack 35 has executed node 440 at[line440|§1|indent0|sp0]
+[2026|11|18|23:02:24:387][interpreter]Node vm_body_count declared as int64
+[2026|11|18|23:02:24:387][interpreter]Node vm_body_count storage at 0x622a47fabf30, value=Int(0)
+[2026|11|18|23:02:24:387][interpreter]Execution stack 36 has executed node 441 at[line441|§1|indent0|sp0]
+[2026|11|18|23:02:24:387][interpreter]Node vm_data_bytes declared as int64
+[2026|11|18|23:02:24:387][interpreter]Node vm_data_bytes storage at 0x622a47fabbc0, value=Int(0)
+[2026|11|18|23:02:24:387][interpreter]Execution stack 37 has executed node 442 at[line442|§1|indent0|sp0]
+[2026|11|18|23:02:24:388][interpreter]Node vm_ended declared as bool
+[2026|11|18|23:02:24:388][interpreter]Node vm_ended storage at 0x622a47fac200, value=Bool(false)
+[2026|11|18|23:02:24:388][interpreter]Execution stack 38 has executed node 443 at[line443|§1|indent0|sp0]
+[2026|11|18|23:02:24:388][interpreter]Execution stack 39 has executed node 446 at[line446|§1|indent0|sp0]
+[2026|11|18|23:02:24:388][interpreter]Execution stack 40 has executed node 509 at[line509|§1|indent0|sp0]
+[2026|11|18|23:02:24:388][interpreter]Execution stack 41 has executed node 517 at[line517|§1|indent0|sp0]
+[2026|11|18|23:02:24:388][interpreter]Execution stack 42 has executed node 522 at[line522|§1|indent0|sp0]
+[2026|11|18|23:02:24:388][interpreter]Execution stack 43 has executed node 528 at[line528|§1|indent0|sp0]
+[2026|11|18|23:02:24:388][interpreter]Execution stack 44 has executed node 536 at[line536|§1|indent0|sp0]
+[2026|11|18|23:02:24:388][interpreter]Execution stack 45 has executed node 545 at[line545|§1|indent0|sp0]
+[2026|11|18|23:02:24:388][interpreter]Execution stack 46 has executed node 558 at[line558|§1|indent0|sp0]
+[2026|11|18|23:02:24:388][interpreter]Execution stack 47 has executed node 569 at[line569|§1|indent0|sp0]
+[2026|11|18|23:02:24:388][interpreter]Execution stack 48 has executed node 599 at[line599|§1|indent0|sp0]
+[2026|11|18|23:02:24:388][interpreter]Execution stack 49 has executed node 608 at[line608|§1|indent0|sp0]
+[2026|11|18|23:02:24:388][interpreter]Execution stack 50 has executed node 705 at[line705|§1|indent0|sp0]
+[2026|11|18|23:02:24:388][interpreter]Execution stack 51 has executed node 712 at[line712|§1|indent0|sp0]
+[2026|11|18|23:02:24:388][interpreter]Execution stack 52 has executed node 737 at[line737|§1|indent0|sp0]
+[2026|11|18|23:02:24:388][interpreter]Execution stack 53 has executed node 799 at[line799|§1|indent0|sp0]
+[2026|11|18|23:02:24:388][interpreter]Execution stack 54 has executed node 889 at[line889|§1|indent0|sp0]
+[2026|11|18|23:02:24:388][interpreter]Execution stack 55 has executed node 897 at[line897|§1|indent0|sp0]
+[2026|11|18|23:02:24:388][interpreter]Execution stack 56 has executed node 932 at[line932|§1|indent0|sp0]
+[2026|11|18|23:02:24:388][interpreter]Execution stack 57 has executed node 1243 at[line1243|§1|indent0|sp0]
+[2026|11|18|23:02:24:388][interpreter]Execution stack 58 has executed node 1272 at[line1272|§1|indent0|sp0]
+[2026|11|18|23:02:24:388][interpreter]Execution stack 59 has executed node 1308 at[line1308|§1|indent0|sp0]
+[2026|11|18|23:02:24:388][interpreter]Execution stack 60 has executed node 1378 at[line1378|§1|indent0|sp0]
+[2026|11|18|23:02:24:388][interpreter]Execution stack 61 has executed node 1386 at[line1386|§1|indent0|sp0]
+[2026|11|18|23:02:24:388][interpreter]Execution stack 62 has executed node 1398 at[line1398|§1|indent0|sp0]
+[2026|11|18|23:02:24:388][interpreter]Execution stack 63 has executed node 1405 at[line1405|§1|indent0|sp0]
+[2026|11|18|23:02:24:388][interpreter]Execution stack 64 has executed node 1481 at[line1481|§1|indent0|sp0]
+[2026|11|18|23:02:24:388][interpreter]Execution stack 65 has executed node 1650 at[line1650|§1|indent0|sp0]
+[2026|11|18|23:02:24:388][interpreter]Execution stack 66 has executed node 1653 at[line1653|§1|indent0|sp0]
+[2026|11|18|23:02:24:388][interpreter]Execution stack 67 has executed node 1703 at[line1703|§1|indent0|sp0]
+[2026|11|18|23:02:24:388][interpreter]List sc_ops declared with 0 entries (requested 0, forced false)
+[2026|11|18|23:02:24:388][interpreter]Execution stack 68 has executed node 1704 at[line1704|§1|indent0|sp0]
+[2026|11|18|23:02:24:388][interpreter]List sc_as declared with 0 entries (requested 0, forced false)
+[2026|11|18|23:02:24:388][interpreter]Execution stack 69 has executed node 1705 at[line1705|§1|indent0|sp0]
+[2026|11|18|23:02:24:388][interpreter]List sc_bs declared with 0 entries (requested 0, forced false)
+[2026|11|18|23:02:24:388][interpreter]Execution stack 70 has executed node 1706 at[line1706|§1|indent0|sp0]
+[2026|11|18|23:02:24:388][interpreter]List sc_cs declared with 0 entries (requested 0, forced false)
+[2026|11|18|23:02:24:388][interpreter]Execution stack 71 has executed node 1707 at[line1707|§1|indent0|sp0]
+[2026|11|18|23:02:24:388][interpreter]List sc_lines declared with 0 entries (requested 0, forced false)
+[2026|11|18|23:02:24:388][interpreter]Execution stack 72 has executed node 1708 at[line1708|§1|indent0|sp0]
+[2026|11|18|23:02:24:388][interpreter]List sc_parents declared with 0 entries (requested 0, forced false)
+[2026|11|18|23:02:24:388][interpreter]Execution stack 73 has executed node 1709 at[line1709|§1|indent0|sp0]
+[2026|11|18|23:02:24:388][interpreter]List sc_closed declared with 0 entries (requested 0, forced false)
+[2026|11|18|23:02:24:389][interpreter]Execution stack 74 has executed node 1710 at[line1710|§1|indent0|sp0]
+[2026|11|18|23:02:24:389][interpreter]List sc_ends declared with 0 entries (requested 0, forced false)
+[2026|11|18|23:02:24:389][interpreter]Execution stack 75 has executed node 1711 at[line1711|§1|indent0|sp0]
+[2026|11|18|23:02:24:389][interpreter]List sc_dict_ids declared with 0 entries (requested 0, forced false)
+[2026|11|18|23:02:24:389][interpreter]Execution stack 76 has executed node 1712 at[line1712|§1|indent0|sp0]
+[2026|11|18|23:02:24:389][interpreter]List sc_dict_sigs declared with 0 entries (requested 0, forced false)
+[2026|11|18|23:02:24:389][interpreter]Execution stack 77 has executed node 1713 at[line1713|§1|indent0|sp0]
+[2026|11|18|23:02:24:389][interpreter]List sc_case_parents declared with 0 entries (requested 0, forced false)
+[2026|11|18|23:02:24:389][interpreter]Execution stack 78 has executed node 1714 at[line1714|§1|indent0|sp0]
+[2026|11|18|23:02:24:389][interpreter]List sc_import_names declared with 0 entries (requested 0, forced false)
+[2026|11|18|23:02:24:389][interpreter]Execution stack 79 has executed node 1715 at[line1715|§1|indent0|sp0]
+[2026|11|18|23:02:24:389][interpreter]List sc_import_files declared with 0 entries (requested 0, forced false)
+[2026|11|18|23:02:24:389][interpreter]Execution stack 80 has executed node 1716 at[line1716|§1|indent0|sp0]
+[2026|11|18|23:02:24:389][interpreter]List sc_from_names declared with 0 entries (requested 0, forced false)
+[2026|11|18|23:02:24:389][interpreter]Execution stack 81 has executed node 1717 at[line1717|§1|indent0|sp0]
+[2026|11|18|23:02:24:389][interpreter]List sc_from_files declared with 0 entries (requested 0, forced false)
+[2026|11|18|23:02:24:389][interpreter]Execution stack 82 has executed node 1718 at[line1718|§1|indent0|sp0]
+[2026|11|18|23:02:24:389][interpreter]Node sc_top declared as int
+[2026|11|18|23:02:24:389][interpreter]Node sc_top storage at 0x622a47faf420, value=Int(-1)
+[2026|11|18|23:02:24:389][interpreter]Execution stack 83 has executed node 1719 at[line1719|§1|indent0|sp0]
+[2026|11|18|23:02:24:389][interpreter]Node sc_line_no declared as int
+[2026|11|18|23:02:24:389][interpreter]Node sc_line_no storage at 0x622a47fafb00, value=Int(0)
+[2026|11|18|23:02:24:389][interpreter]Execution stack 84 has executed node 1720 at[line1720|§1|indent0|sp0]
+[2026|11|18|23:02:24:389][interpreter]Node sc_raw declared as str
+[2026|11|18|23:02:24:389][interpreter]Node sc_raw storage at 0x622a47faf010, value=String("")
+[2026|11|18|23:02:24:389][interpreter]Execution stack 85 has executed node 1721 at[line1721|§1|indent0|sp0]
+[2026|11|18|23:02:24:389][interpreter]Node sc_doc declared as bool
+[2026|11|18|23:02:24:389][interpreter]Node sc_doc storage at 0x622a47faee30, value=Bool(false)
+[2026|11|18|23:02:24:389][interpreter]Execution stack 86 has executed node 1722 at[line1722|§1|indent0|sp0]
+[2026|11|18|23:02:24:389][interpreter]Node sc_pending_name declared as str
+[2026|11|18|23:02:24:389][interpreter]Node sc_pending_name storage at 0x622a47faf7e0, value=String("")
+[2026|11|18|23:02:24:389][interpreter]Execution stack 87 has executed node 1723 at[line1723|§1|indent0|sp0]
+[2026|11|18|23:02:24:389][interpreter]Node sc_pending_value declared as str
+[2026|11|18|23:02:24:389][interpreter]Node sc_pending_value storage at 0x622a47faede0, value=String("")
+[2026|11|18|23:02:24:389][interpreter]Execution stack 88 has executed node 1724 at[line1724|§1|indent0|sp0]
+[2026|11|18|23:02:24:390][interpreter]Node sc_schema_name declared as str
+[2026|11|18|23:02:24:390][interpreter]Node sc_schema_name storage at 0x622a47faf6f0, value=String("")
+[2026|11|18|23:02:24:390][interpreter]Execution stack 89 has executed node 1725 at[line1725|§1|indent0|sp0]
+[2026|11|18|23:02:24:390][interpreter]Node sc_schema_text declared as str
+[2026|11|18|23:02:24:390][interpreter]Node sc_schema_text storage at 0x622a47faf6a0, value=String("")
+[2026|11|18|23:02:24:390][interpreter]Execution stack 90 has executed node 1726 at[line1726|§1|indent0|sp0]
+[2026|11|18|23:02:24:390][interpreter]Node sc_throw_text declared as str
+[2026|11|18|23:02:24:390][interpreter]Node sc_throw_text storage at 0x622a47faed90, value=String("")
+[2026|11|18|23:02:24:390][interpreter]Execution stack 91 has executed node 1727 at[line1727|§1|indent0|sp0]
+[2026|11|18|23:02:24:390][interpreter]Node sc_module_scan declared as bool
+[2026|11|18|23:02:24:390][interpreter]Node sc_module_scan storage at 0x622a47faecf0, value=Bool(false)
+[2026|11|18|23:02:24:390][interpreter]Execution stack 92 has executed node 1728 at[line1728|§1|indent0|sp0]
+[2026|11|18|23:02:24:390][interpreter]Node sc_private declared as bool
+[2026|11|18|23:02:24:390][interpreter]Node sc_private storage at 0x622a47faed40, value=Bool(false)
+[2026|11|18|23:02:24:390][interpreter]Execution stack 93 has executed node 1729 at[line1729|§1|indent0|sp0]
+[2026|11|18|23:02:24:390][interpreter]List v2_pool_keys declared with 0 entries (requested 0, forced false)
+[2026|11|18|23:02:24:390][interpreter]Execution stack 94 has executed node 1730 at[line1730|§1|indent0|sp0]
+[2026|11|18|23:02:24:390][interpreter]List v2_pool declared with 0 entries (requested 0, forced false)
+[2026|11|18|23:02:24:390][interpreter]Execution stack 95 has executed node 1731 at[line1731|§1|indent0|sp0]
+[2026|11|18|23:02:24:390][interpreter]List v2_module_children declared with 0 entries (requested 0, forced false)
+[2026|11|18|23:02:24:390][interpreter]Execution stack 96 has executed node 1732 at[line1732|§1|indent0|sp0]
+[2026|11|18|23:02:24:390][interpreter]List v2_module_parents declared with 0 entries (requested 0, forced false)
+[2026|11|18|23:02:24:390][interpreter]Execution stack 97 has executed node 1733 at[line1733|§1|indent0|sp0]
+[2026|11|18|23:02:24:390][interpreter]Execution stack 98 has executed node 1762 at[line1762|§1|indent0|sp0]
+[2026|11|18|23:02:24:390][interpreter]Execution stack 99 has executed node 1811 at[line1811|§1|indent0|sp0]
+[2026|11|18|23:02:24:390][interpreter]Node native_source_dir declared as str
+[2026|11|18|23:02:24:390][interpreter]Node native_source_dir storage at 0x622a47faeac0, value=String("/mnt/D/main/Node container system/NCS")
+[2026|11|18|23:02:24:390][interpreter]Execution stack 100 has executed node 1812 at[line1812|§1|indent0|sp0]
+[2026|11|18|23:02:24:390][interpreter]Node vm_mode declared as str
+[2026|11|18|23:02:24:390][interpreter]Node vm_mode storage at 0x622a47fafa10, value=String("repl")
+[2026|11|18|23:02:24:390][interpreter]Execution stack 101 has executed node 1813 at[line1813|§1|indent0|sp0]
+[2026|11|18|23:02:24:390][interpreter]Execution stack 102 has executed node 1814 at[line1814|§2|indent1|sp0]
+[2026|11|18|23:02:24:391][interpreter]Execution stack 103 has executed node 1763 at[line1763|§2|indent1|sp0]
+[2026|11|18|23:02:24:391][interpreter]Print emitted: NCS interactive — blank line or :run executes a cell. :clear discards it; :reset clears the session; :quit exits.
+[2026|11|18|23:02:24:391][interpreter]Execution stack 104 has executed node 1764 at[line1764|§2|indent1|sp0]
+[2026|11|18|23:02:24:391][interpreter]Node ncs_prompt.repl_buffer declared as str
+[2026|11|18|23:02:24:391][interpreter]Node ncs_prompt.repl_buffer storage at 0x622a47fae930, value=String("")
+[2026|11|18|23:02:24:391][interpreter]Execution stack 105 has executed node 1765 at[line1765|§2|indent1|sp0]
+[2026|11|18|23:02:24:391][interpreter]Node ncs_prompt.repl_line declared as str
+[2026|11|18|23:02:24:391][interpreter]Node ncs_prompt.repl_line storage at 0x622a47faf650, value=String("")
+[2026|11|18|23:02:24:391][interpreter]Execution stack 106 has executed node 1766 at[line1766|§2|indent1|sp0]
+[2026|11|18|23:02:24:391][interpreter]Node ncs_prompt.repl_active declared as bool
+[2026|11|18|23:02:24:391][interpreter]Node ncs_prompt.repl_active storage at 0x622a47faf5b0, value=Bool(true)
+[2026|11|18|23:02:24:391][interpreter]Execution stack 107 has executed node 1767 at[line1767|§2|indent1|sp0]
+[2026|11|18|23:02:24:391][interpreter]Execution stack 108 has executed node 1768 at[line1768|§3|indent2|sp0]
+[2026|11|18|23:02:24:391][interpreter]Node ncs_prompt.repl_prefix declared as str
+[2026|11|18|23:02:24:391][interpreter]Node ncs_prompt.repl_prefix storage at 0x622a47faf0b0, value=String(">>> ")
+[2026|11|18|23:02:24:391][interpreter]Execution stack 109 has executed node 1769 at[line1769|§3|indent2|sp0]
+[2026|11|18|23:02:24:391][interpreter]Execution stack 110 has executed node 1772 at[line1772|§3|indent2|sp0]
+[2026|11|18|23:02:24:391][interpreter]Execution stack 111 has executed node 1773 at[line1773|§4|indent3|sp0]
+[2026|11|18|23:02:31:750][interpreter]Input received (5 characters)
+[2026|11|18|23:02:31:750][interpreter]Node repl_line changed using %replace
+[2026|11|18|23:02:31:750][interpreter]Node repl_line new storage 0x622a47fb5400 = String(":quit")
+[2026|11|18|23:02:31:750][interpreter]Execution stack 112 has executed node 1777 at[line1777|§3|indent2|sp0]
+[2026|11|18|23:02:31:750][interpreter]Execution stack 113 has executed node 1778 at[line1778|§4|indent3|sp0]
+[2026|11|18|23:02:31:750][interpreter]Execution stack 114 has executed node 1815 at[line1815|§2|indent1|sp0]
+[2026|11|18|23:02:31:750][interpreter]Exit selected code 0
+[2026|11|18|23:02:31:750][interpreter]Cleaning up 56 remaining node references
+[2026|11|18|23:02:31:750]program: interpreter has ended with exit code 0
