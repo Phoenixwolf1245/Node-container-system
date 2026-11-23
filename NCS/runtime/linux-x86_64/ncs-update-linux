@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+# NCS official Debian-family updater. Uses repository-pinned, checksum-verified
+# Linux x86_64 .deb. Never handles credentials or runs developer package scripts.
+set -euo pipefail
+
+OWNER='Phoenixwolf1245'
+REPO='Node-container-system'
+BRANCH='main'
+VERSION_CHECK=false
+case "${1:-}" in
+  '') ;;
+  --check) VERSION_CHECK=true; shift ;;
+  --help|-h)
+    printf '%s\n' 'Usage: ncs update [--check]' '' \
+      'Checks the official NCS repository and verifies its Linux .deb.' \
+      'Without --check, installs the verified package using apt-get (sudo when needed).' \
+      'Supported: Debian/Ubuntu-compatible x86_64 systems with apt-get.'
+    exit 0 ;;
+  *) printf 'ncs update: unknown option: %s\n' "$1" >&2; exit 2 ;;
+esac
+[[ $# -eq 0 ]] || { printf 'ncs update: too many arguments\n' >&2; exit 2; }
+
+fail(){ printf 'ncs update: %s\n' "$*" >&2; exit 1; }
+[[ "$(uname -s)" == 'Linux' ]] || fail 'This updater is Linux-only.'
+[[ "$(uname -m)" == 'x86_64' ]] || fail 'Official package currently supports Linux x86_64 only.'
+for t in curl jq sha256sum dpkg-deb mktemp; do
+    command -v "$t" >/dev/null 2>&1 || fail "Missing dependency: $t"
+done
+if [[ "$VERSION_CHECK" == false ]]; then
+    command -v apt-get >/dev/null 2>&1 || fail 'This release is a .deb; apt-get is required.'
+    if [[ "$(id -u)" -ne 0 ]]; then
+        command -v sudo >/dev/null 2>&1 || fail 'sudo required for system-wide package update.'
+    fi
+fi
+
+TMP="$(mktemp -d)" || fail 'Cannot create temporary directory.'
+trap 'rm -rf -- "$TMP"' EXIT
+fetch(){
+    curl -fsSL --proto '=https' --proto-redir '=https' --tlsv1.2 \
+      --retry 2 --connect-timeout 12 --max-time 180 \
+      -H 'User-Agent: NCS-official-update' \
+      --output "$1" "$2"
+}
+api="https://api.github.com/repos/$OWNER/$REPO"
+fetch "$TMP/commit.json" "$api/commits/$BRANCH"
+sha="$(jq -er '.sha | select(type == "string")' "$TMP/commit.json")" || fail 'Cannot identify a current source commit.'
+[[ "$sha" =~ ^[0-9a-f]{40}$ ]] || fail 'Invalid repository commit identifier.'
+raw="https://raw.githubusercontent.com/$OWNER/$REPO/$sha"
+filename='NCS-install-x86_64.deb'
+fetch "$TMP/SHA256SUMS" "$raw/NCS/installers/SHA256SUMS"
+fetch "$TMP/$filename" "$raw/Release/NCS/$filename"
+awk -v file="$filename" '$2 == file {print $1 "  " file}' "$TMP/SHA256SUMS" > "$TMP/check.sha256"
+[[ "$(wc -l < "$TMP/check.sha256")" -eq 1 ]] || fail 'Missing or ambiguous NCS checksum in official manifest.'
+grep -Eq "^[0-9a-fA-F]{64}  ${filename//./\\.}\$" "$TMP/check.sha256" || fail 'Malformed NCS SHA-256 checksum.'
+(cd "$TMP" && sha256sum -c --status check.sha256) || fail 'Download failed integrity verification.'
+package="$(dpkg-deb --field "$TMP/$filename" Package)" || fail 'The downloaded file is not a valid Debian package.'
+architecture="$(dpkg-deb --field "$TMP/$filename" Architecture)" || fail 'Cannot identify package architecture.'
+[[ "$architecture" == amd64 || "$architecture" == all ]] || fail "Unsupported package architecture: $architecture"
+[[ -n "$package" ]] || fail 'Package metadata has no package name.'
+printf 'NCS update: verified package %s (%s) from GitHub commit %s\n' "$package" "$architecture" "$sha"
+if [[ "$VERSION_CHECK" == true ]]; then
+    printf 'NCS update: --check completed; no files changed.\n'
+    exit 0
+fi
+printf 'NCS update: system installation needs administrator privileges.\n'
+if [[ "$(id -u)" -eq 0 ]]; then
+    apt-get install -- "$TMP/$filename"
+else
+    sudo apt-get install -- "$TMP/$filename"
+fi

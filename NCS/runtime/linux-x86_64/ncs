@@ -29,6 +29,7 @@ Usage:
   ncs interpret [-L0..4|--no-log] source.ncs[.compile]
   ncs run [-L0..4|--no-log] binary.elf|binary.so|binary.exe|binary.dll
   NCS (no arguments) — interactive prompt
+  ncs update [--check]
   ncs log LEVEL SOURCE TAG MESSAGE
 Compiler seed: NCS_compile.elf (default), or NCS_COMPILER2_HOST=SO.
 No automatic bootstrap or Rust fallback. If a feature is unsupported, compilation fails.
@@ -284,6 +285,7 @@ parse_run() {
   FILE="$(realpath -- "$FILE")"
 }
 case "${1:-}" in
+  update) shift; exec bash "$ROOT/ncs-update-linux" "$@";;
   compile|compiler2) shift; compile "$@";;
   interpret) shift; parse_run "$@"; case "$FILE" in
     *.ncs.compile) with_log interpreter interpret interpreter "$FILE" binary;;
