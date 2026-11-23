@@ -1,3 +1,3 @@
-<Core_Modules>[0]</list[int]($999)>
-<Verified_Modules>[]</list[int](99999999999)>
-<UnVerified_Modules>[]</list[int](99999999999)>
+<Core_Modules>[0]</list[int](1)> !<-- 0-999 Only developers can add core modules
+<Verified_Modules>[]</list[int](0)> !<-- ints 1000 and up, Pick a number that isn't used
+<UnVerified_Modules>[]</list[int](0)> !<-- ints 1000 and up, Pick a number that isn't used
